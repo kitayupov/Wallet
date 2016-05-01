@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Wallet</string>
+    <string name="action_settings">Settings</string>
+    <string name="profit">Profit</string>
+    <string name="spending">Spending</string>
+    <string name="default_total">0.0</string>
+</resources>
