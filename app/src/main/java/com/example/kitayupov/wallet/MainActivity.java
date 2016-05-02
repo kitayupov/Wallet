@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.MenuInflater;
 import android.view.View;
@@ -118,11 +118,11 @@ public class MainActivity extends AppCompatActivity {
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             ArrayList<Transaction> list = new ArrayList<Transaction>();
+
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position,
                                                   long id, boolean checked) {
-                int count = mListView.getCheckedItemCount();
-                mode.setTitle(String.valueOf(count));
+                mode.setTitle(String.valueOf(mListView.getCheckedItemCount()));
                 Transaction item = mAdapter.getItem(position);
                 if (checked) {
                     list.add(item);
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.menu_context, menu);
+                inflater.inflate(R.menu.menu_contextual, menu);
                 return true;
             }
 
@@ -261,13 +261,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_clear:
+//                deleteTransaction(mArrayList);
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                db.execSQL("delete from " + TransDbHelper.TABLE_NAME);
+                mArrayList.clear();
+                mAdapter.notifyDataSetChanged();
+                totalProfit = totalSpend = 0;
+                setTotal();
+                return true;
+            case R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
 //    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -280,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //            // Заполняем меню
 //            MenuInflater inflater = mode.getMenuInflater();
-//            inflater.inflate(R.menu.menu_context, menu);
+//            inflater.inflate(R.menu.menu_contextual, menu);
 //            return true;
 //        }
 //
