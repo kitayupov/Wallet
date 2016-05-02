@@ -10,18 +10,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     private float totalProfit;
     private float totalSpend;
-    private float total;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(TransDbHelper.TABLE_NAME, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
-//            int id = cursor.getColumnIndex(BaseColumns._ID);
             int amountIndex = cursor.getColumnIndex(AMOUNT);
             int typeIndex = cursor.getColumnIndex(TYPE);
             int dateIndex = cursor.getColumnIndex(DATE);
@@ -115,9 +112,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void registerContextualActionBar() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(context, ActivityEditor.class);
+                intent.putExtra(POSITION, position);
+                intent.putExtra(Transaction.class.getCanonicalName(), mAdapter.getItem(position));
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
+
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-            ArrayList<Transaction> list = new ArrayList<Transaction>();
+            ArrayList<Transaction> list = new ArrayList<>();
 
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position,
@@ -129,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     list.remove(item);
                 }
-                Log.d(LOG_TAG, (checked ? "added " : "removed ") + item.toString());
             }
 
             @Override
@@ -137,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.context_menu_delete:
                         deleteTransaction(list);
-                        list = new ArrayList<Transaction>();
+                        list = new ArrayList<>();
                         mode.finish();
                         return true;
                     default:
@@ -166,12 +172,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteTransaction(ArrayList<Transaction> list) {
-        Log.d(LOG_TAG, "" + Arrays.asList(list).toString());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         for (Transaction item : list) {
-            //Transaction item = (Transaction) mListView.getItemAtPosition(i);/* mArrayList.get(i);*/
-//            db.delete(TransDbHelper.TABLE_NAME, AMOUNT + "=?", new String[]{String.valueOf(item.getAmount())});
-//            db.delete(TransDbHelper.TABLE_NAME, BaseColumns._ID + "=?", new String[]{String.valueOf(i)});
             String whereClause =
                     AMOUNT + "=? and " + TYPE + "=? and " + DATE + "=? and " + IS_PROFIT + "=?";
             String[] whereArgs = new String[]{
@@ -184,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 totalSpend -= item.getAmount();
             }
-            Log.d(LOG_TAG, "deleted " + item.toString());
         }
         mAdapter.notifyDataSetChanged();
         setTotal();
@@ -200,8 +201,6 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     break;
             }
-        } else {
-
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -211,46 +210,48 @@ public class MainActivity extends AppCompatActivity {
             int position = data.getIntExtra(POSITION, Integer.MIN_VALUE);
             position = (position >= 0 && position < mArrayList.size()) ? position : mArrayList.size();
             Transaction item = data.getParcelableExtra(Transaction.class.getCanonicalName());
-            Log.d(LOG_TAG, item.toString());
-            totalProfit += item.isProfit() ? item.getAmount() : 0;
-            totalSpend += item.isProfit() ? 0 : item.getAmount();
-            mArrayList.add(position, item);
-            mAdapter.notifyDataSetChanged();
-            setTotal();
 
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(AMOUNT, item.getAmount());
             values.put(TYPE, item.getType());
             values.put(DATE, item.getDate());
-            values.put(IS_PROFIT, item.isProfit());
-            if (position == mArrayList.size() - 1) {
-                db.insert(TransDbHelper.TABLE_NAME, null, values);
-                Log.d(LOG_TAG, "insert " + item.toString());
-            } else {
-                Log.d(LOG_TAG, "update " + item.toString());
-            }
-            //fixme example
-//            } else {
-////                db.update(NoteDBHelper.TABLE_NAME, values, BaseColumns._ID + "= ?", new String[] );
-//                db.insert(NoteDBHelper.TABLE_NAME, null, values);
-//                Log.d(LOG_TAG, "edited: " + item.toString());
-//                /*String whereClause = BODY + "=? and " + TYPE + "=? and " + DATE + "=? and " +
-//                        RATING + "=? and " + IS_DONE + "=?";
-//                String[] whereArgs = new String[]{
-//                        item.getBody(), item.getType(), String.valueOf(item.getDate()),
-//                        String.valueOf(item.getRating()), String.valueOf(item.getIsDone())};
-//                db.delete(NoteDBHelper.TABLE_NAME, whereClause, whereArgs);*/
-//            }
+            values.put(IS_PROFIT, item.isProfit() ? 1 : 0);
 
+            if (position == mArrayList.size()) {
+                db.insert(TransDbHelper.TABLE_NAME, null, values);
+                Log.d(LOG_TAG, "insert #" + position + item.toString());
+            } else {
+                updateRow(mArrayList.get(position), values);
+                Log.d(LOG_TAG, "update #" + position + item.toString());
+            }
+
+            totalProfit += item.isProfit() ? item.getAmount() : 0;
+            totalSpend += item.isProfit() ? 0 : item.getAmount();
+            mArrayList.add(position, item);
+            mAdapter.notifyDataSetChanged();
+            setTotal();
         }
     }
 
+    private void updateRow(Transaction item, ContentValues values) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String whereClause =
+                AMOUNT + "=? and " + TYPE + "=? and " +
+                        DATE + "=? and " + IS_PROFIT + "=?";
+        String[] whereArgs = new String[]{
+                String.valueOf(item.getAmount()), item.getType(),
+                String.valueOf(item.getDate()), String.valueOf(item.isProfit() ? 1 : 0)};
+        db.update(TransDbHelper.TABLE_NAME, values, whereClause, whereArgs);
+        mArrayList.remove(item);
+        totalProfit -= item.isProfit() ? item.getAmount() : 0;
+        totalSpend -= item.isProfit() ? 0 : item.getAmount();
+    }
+
     private void setTotal() {
-        total = totalProfit - totalSpend;
         profitTextView.setText(String.valueOf(totalProfit));
         spendTextView.setText(String.valueOf(totalSpend));
-        totalTextView.setText(String.valueOf(total));
+        totalTextView.setText(String.valueOf(totalProfit - totalSpend));
     }
 
     @Override
@@ -277,45 +278,4 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-//    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-//
-//        // Вызывается при создании контекстного режима
-//        @Override
-//        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-//
-//            Log.d(LOG_TAG, "CAB!!!");
-//
-//            // Заполняем меню
-//            MenuInflater inflater = mode.getMenuInflater();
-//            inflater.inflate(R.menu.menu_contextual, menu);
-//            return true;
-//        }
-//
-//        // Вызывается при каждом отображении контекстного режима. Всегда вызывается после onCreateActionMode, но
-//        // может быть вызван несколько раз
-//        @Override
-//        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-//            return false; // возвращаем false, если ничего не сделано
-//        }
-//
-//        // Вызывается при выборе действия контекстной панели
-//        @Override
-//        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-//            switch (item.getItemId()) {
-//                case R.id.context_menu_delete:
-//                    Log.d(LOG_TAG, "context delete");
-//                    mode.finish(); // Action picked, so close the CAB
-//                    return true;
-//                default:
-//                    return false;
-//            }
-//        }
-//
-//        // Вызывается при выходе из контекстного режима
-//        @Override
-//        public void onDestroyActionMode(ActionMode mode) {
-////            mActionMode = null;
-//        }
-//    };
 }
