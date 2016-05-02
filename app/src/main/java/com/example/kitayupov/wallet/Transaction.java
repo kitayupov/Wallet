@@ -14,6 +14,13 @@ public class Transaction implements Parcelable {
     public Transaction() {
     }
 
+    public Transaction(float amount, String type, long date, boolean isProfit) {
+        this.amount = amount;
+        this.type = type;
+        this.date = date;
+        this.isProfit = isProfit;
+    }
+
     protected Transaction(Parcel in) {
         amount = in.readFloat();
         type = in.readString();
