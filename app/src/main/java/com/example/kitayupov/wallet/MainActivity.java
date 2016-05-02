@@ -21,7 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView mListView;
     private ArrayList<Transaction> mArrayList;
-    private HashMap<Integer, Transaction> map;
     private TransAdapter mAdapter;
     private TransDbHelper dbHelper;
     private Context context;
@@ -75,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
         spendTextView = (TextView) findViewById(R.id.spend_text_view);
         totalTextView = (TextView) findViewById(R.id.total_text_view);
 
-        map = new HashMap<>();
         mArrayList = new ArrayList<>();
         dbHelper = new TransDbHelper(context);
         mAdapter = new TransAdapter(context, mArrayList);
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(TransDbHelper.TABLE_NAME, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
-            int id = cursor.getColumnIndex(BaseColumns._ID);
+//            int id = cursor.getColumnIndex(BaseColumns._ID);
             int amountIndex = cursor.getColumnIndex(AMOUNT);
             int typeIndex = cursor.getColumnIndex(TYPE);
             int dateIndex = cursor.getColumnIndex(DATE);
@@ -107,9 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     totalSpend += amount;
                 }
                 Transaction item = new Transaction(amount, type, date, isProfit);
-//                mArrayList.add(item);
-                map.put(id, item);
-                mArrayList.add(id, item);
+                mArrayList.add(item);
                 Log.d(LOG_TAG, "readed " + item.toString());
             } while (cursor.moveToNext());
             cursor.close();
@@ -121,18 +117,19 @@ public class MainActivity extends AppCompatActivity {
     private void registerContextualActionBar() {
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         mListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-            ArrayList<Integer> list = new ArrayList<Integer>();
+            ArrayList<Transaction> list = new ArrayList<Transaction>();
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position,
                                                   long id, boolean checked) {
-                mode.setTitle(String.valueOf(mListView.getCheckedItemCount()));
-                int i = mArrayList.indexOf(mAdapter.getItem(position));
+                int count = mListView.getCheckedItemCount();
+                mode.setTitle(String.valueOf(count));
+                Transaction item = mAdapter.getItem(position);
                 if (checked) {
-                    list.add(i);
+                    list.add(item);
                 } else {
-                    list.remove(i);
+                    list.remove(item);
                 }
-                Log.d(LOG_TAG, (checked ? "added " : "removed ") + i);
+                Log.d(LOG_TAG, (checked ? "added " : "removed ") + item.toString());
             }
 
             @Override
@@ -140,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.context_menu_delete:
                         deleteTransaction(list);
+                        list = new ArrayList<Transaction>();
                         mode.finish();
                         return true;
                     default:
@@ -167,12 +165,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void deleteTransaction(ArrayList<Integer> list) {
+    private void deleteTransaction(ArrayList<Transaction> list) {
+        Log.d(LOG_TAG, "" + Arrays.asList(list).toString());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        for (Integer i : list) {
-            Transaction item = mArrayList.get(i);
-            db.delete(TransDbHelper.TABLE_NAME, AMOUNT + "=?", new String[]{String.valueOf(item.getAmount())});
+        for (Transaction item : list) {
+            //Transaction item = (Transaction) mListView.getItemAtPosition(i);/* mArrayList.get(i);*/
+//            db.delete(TransDbHelper.TABLE_NAME, AMOUNT + "=?", new String[]{String.valueOf(item.getAmount())});
 //            db.delete(TransDbHelper.TABLE_NAME, BaseColumns._ID + "=?", new String[]{String.valueOf(i)});
+            String whereClause =
+                    AMOUNT + "=? and " + TYPE + "=? and " + DATE + "=? and " + IS_PROFIT + "=?";
+            String[] whereArgs = new String[]{
+                    String.valueOf(item.getAmount()), item.getType(),
+                    String.valueOf(item.getDate()), String.valueOf(item.isProfit() ? 1 : 0)};
+            db.delete(TransDbHelper.TABLE_NAME, whereClause, whereArgs);
             mArrayList.remove(item);
             if (item.isProfit()) {
                 totalProfit -= item.getAmount();
@@ -247,8 +252,6 @@ public class MainActivity extends AppCompatActivity {
         spendTextView.setText(String.valueOf(totalSpend));
         totalTextView.setText(String.valueOf(total));
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
