@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:background="?android:attr/activatedBackgroundIndicator"
     android:paddingBottom="@dimen/list_vertical_margin"
-    android:paddingTop="@dimen/list_vertical_margin">
+    android:paddingTop="@dimen/list_vertical_margin"
+    >
 
     <TextView
         android:id="@+id/amount_text_view"
