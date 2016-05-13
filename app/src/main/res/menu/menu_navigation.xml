@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/actionTransactionsItem"
+        android:icon="@mipmap/ic_launcher"
+        android:orderInCategory="1"
+        android:title="@string/menu_item_transactions" />
+    <!--<item
+        android:icon="@drawable/magnify"
+        android:orderInCategory="1"
+        android:title="1" />-->
+    <!--<item
+        android:icon="@drawable/magnify"
+        android:orderInCategory="1"
+        android:title="1" />
+    <item
+        android:icon="@drawable/magnify"
+        android:orderInCategory="1"
+        android:title="1" />
+    <item
+        android:icon="@drawable/magnify"
+        android:orderInCategory="1"
+        android:title="1" />-->
+</menu>

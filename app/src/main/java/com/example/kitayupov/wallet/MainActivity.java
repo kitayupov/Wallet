@@ -52,12 +52,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Toolbar totalBar = (Toolbar) findViewById(R.id.total_bar);
-//        totalBar.setTitle("Hello bar");
-        profitTextView = ((TextView) findViewById(R.id.profit_text_view));
-        spendTextView = ((TextView) findViewById(R.id.spend_text_view));
-        totalTextView = ((TextView) findViewById(R.id.total_text_view));
-
         context = this;
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -74,9 +68,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initialize() {
-//        profitTextView = (TextView) findViewById(R.id.profit_text_view);
-//        spendTextView = (TextView) findViewById(R.id.spend_text_view);
-//        totalTextView = (TextView) findViewById(R.id.total_text_view);
+        profitTextView = (TextView) findViewById(R.id.profit_text_view);
+        spendTextView = (TextView) findViewById(R.id.spend_text_view);
+        totalTextView = (TextView) findViewById(R.id.total_text_view);
 
         mArrayList = new ArrayList<>();
         dbHelper = new TransDbHelper(context);

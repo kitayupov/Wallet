@@ -12,42 +12,42 @@
     tools:context="com.example.kitayupov.wallet.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <!--<TextView-->
-        <!--android:id="@+id/total_text_view"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignBottom="@+id/spend_text_view"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:gravity="center_vertical"-->
-        <!--android:text="@string/default_total"-->
-        <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-        <!--android:textStyle="bold" />-->
+    <TextView
+        android:id="@+id/total_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/spend_text_view"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:text="@string/default_total"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold" />
 
-    <!--<TextView-->
-        <!--android:id="@+id/profit_text_view"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:text="@string/default_total"-->
-        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-        <!--android:textColor="@color/colorProfit"-->
-        <!--android:textStyle="bold" />-->
+    <TextView
+        android:id="@+id/profit_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/default_total"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/colorProfit"
+        android:textStyle="bold" />
 
-    <!--<TextView-->
-        <!--android:id="@+id/spend_text_view"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_below="@+id/profit_text_view"-->
-        <!--android:text="@string/default_total"-->
-        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-        <!--android:textColor="@color/colorSpend"-->
-        <!--android:textStyle="bold" />-->
+    <TextView
+        android:id="@+id/spend_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/profit_text_view"
+        android:text="@string/default_total"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/colorSpend"
+        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/transaction_list_view"
