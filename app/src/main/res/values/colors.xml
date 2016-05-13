@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorProfit">#080</color>
     <color name="colorSpend">#d00</color>
+    <color name="colorBackground">#fff</color>
 </resources>
