@@ -9,19 +9,18 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
 public class ActivityEditor extends AppCompatActivity {
+
+    public static final int LAYOUT = R.layout.activity_editor;
 
     private EditText amountEditText;
     private EditText typeEditText;
     private DatePicker datePicker;
     private RadioButton profitRadio;
     private RadioButton spendRadio;
-
-    private static final String LOG_TAG = "ActivityEditor";
 
     private Transaction transaction;
     private int position;
@@ -31,7 +30,7 @@ public class ActivityEditor extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_editor);
+        setContentView(LAYOUT);
         colorProfit = getResources().getColor(R.color.colorProfit);
         colorSpend = getResources().getColor(R.color.colorSpend);
         initialize();
@@ -51,7 +50,7 @@ public class ActivityEditor extends AppCompatActivity {
         if (transaction != null) {
             amountEditText.setText(String.valueOf(transaction.getAmount()));
             typeEditText.setText(transaction.getType());
-            datePicker.getCalendarView().setDate(transaction.getDate());
+            setDate(transaction.getDate());
             profitRadio.setChecked(transaction.isProfit());
             spendRadio.setChecked(!transaction.isProfit());
             amountEditText.setTextColor(transaction.isProfit() ? colorProfit : colorSpend);
@@ -110,7 +109,18 @@ public class ActivityEditor extends AppCompatActivity {
         }
     }
 
-    private static long getDate(DatePicker datePicker) {
+    private void setDate(long date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(date);
+
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        datePicker.updateDate(year, month, day);
+    }
+
+    private long getDate(DatePicker datePicker) {
         int day = datePicker.getDayOfMonth();
         int month = datePicker.getMonth();
         int year = datePicker.getYear();

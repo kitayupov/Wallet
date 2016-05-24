@@ -24,7 +24,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int LAYOUT = R.layout.activity_main;
+
     public static final int REQUEST_CODE = 0;
+
     public static final String POSITION = "position";
     public static final String AMOUNT = "amount";
     public static final String TYPE = "type";
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(LAYOUT);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
