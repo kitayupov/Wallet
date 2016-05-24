@@ -5,4 +5,5 @@
     <string name="spending">Spending</string>
     <string name="default_total">0.0</string>
     <string name="menu_item_transactions">События</string>
+    <string name="message_empty_field">Empty field</string>
 </resources>

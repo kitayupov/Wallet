@@ -1,9 +1,8 @@
 package com.example.kitayupov.wallet;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +10,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class ActivityEditor extends AppCompatActivity {
 
@@ -100,12 +101,24 @@ public class ActivityEditor extends AppCompatActivity {
             transaction = new Transaction();
             transaction.setAmount(Float.parseFloat(string));
             transaction.setType(typeEditText.getText().toString().trim());
-            transaction.setDate(datePicker.getCalendarView().getDate());
+            transaction.setDate(getDate(datePicker));
             transaction.setProfit(profitRadio.isChecked());
             sendResult(transaction);
         } else {
-            Toast.makeText(this, "Empty field", Toast.LENGTH_SHORT).show();
+            amountEditText.setError(getString(R.string.message_empty_field));
+//            Toast.makeText(this, getString(R.string.message_empty_field), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private static long getDate(DatePicker datePicker) {
+        int day = datePicker.getDayOfMonth();
+        int month = datePicker.getMonth();
+        int year = datePicker.getYear();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+
+        return calendar.getTime().getTime();
     }
 
     private void sendResult(Transaction transaction) {
