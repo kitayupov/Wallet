@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wallet</string>
+    <string name="action_settings">Настройки</string>
+    <string name="menu_item_transactions">События</string>
+    <string name="message_empty_field">Пустое поле</string>
+    <string name="profit">Доход</string>
+    <string name="spending">Расход</string>
+    <string name="menu_clear">Удалить все записи</string>
+    <string name="hint_amount">Сумма</string>
+    <string name="hint_type">Категория</string>
+</resources>
