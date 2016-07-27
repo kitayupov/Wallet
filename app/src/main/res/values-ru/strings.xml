@@ -9,4 +9,5 @@
     <string name="menu_clear">Удалить все записи</string>
     <string name="hint_amount">Сумма</string>
     <string name="hint_type">Категория</string>
+    <string name="hint_description">Описание</string>
 </resources>

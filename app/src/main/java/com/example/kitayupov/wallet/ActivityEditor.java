@@ -18,6 +18,7 @@ public class ActivityEditor extends AppCompatActivity {
 
     private EditText amountEditText;
     private EditText typeEditText;
+    private EditText descEditText;
     private DatePicker datePicker;
     private RadioButton profitRadio;
     private RadioButton spendRadio;
@@ -39,6 +40,7 @@ public class ActivityEditor extends AppCompatActivity {
     private void initialize() {
         amountEditText = (EditText) findViewById(R.id.amount_edit_text);
         typeEditText = (EditText) findViewById(R.id.type_edit_text);
+        descEditText = (EditText) findViewById(R.id.desc_edit_text);
         datePicker = (DatePicker) findViewById(R.id.datePicker);
         profitRadio = (RadioButton) findViewById(R.id.profit_radio_button);
         spendRadio = (RadioButton) findViewById(R.id.spend_radio_button);
@@ -50,6 +52,7 @@ public class ActivityEditor extends AppCompatActivity {
         if (transaction != null) {
             amountEditText.setText(String.valueOf(transaction.getAmount()));
             typeEditText.setText(transaction.getType());
+            descEditText.setText(transaction.getDescription());
             setDate(transaction.getDate());
             profitRadio.setChecked(transaction.isProfit());
             spendRadio.setChecked(!transaction.isProfit());
@@ -100,12 +103,12 @@ public class ActivityEditor extends AppCompatActivity {
             transaction = new Transaction();
             transaction.setAmount(Float.parseFloat(string));
             transaction.setType(typeEditText.getText().toString().trim());
+            transaction.setDescription(descEditText.getText().toString().trim());
             transaction.setDate(getDate(datePicker));
             transaction.setProfit(profitRadio.isChecked());
             sendResult(transaction);
         } else {
             amountEditText.setError(getString(R.string.message_empty_field));
-//            Toast.makeText(this, getString(R.string.message_empty_field), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String POSITION = "position";
     public static final String AMOUNT = "amount";
     public static final String TYPE = "type";
+    public static final String DESCRIPTION = "description";
     public static final String DATE = "date";
     public static final String IS_PROFIT = "is_profit";
     private static final String LOG_TAG = "MainActivity";
@@ -92,11 +93,13 @@ public class MainActivity extends AppCompatActivity {
         if (cursor.moveToFirst()) {
             int amountIndex = cursor.getColumnIndex(AMOUNT);
             int typeIndex = cursor.getColumnIndex(TYPE);
+            int descIndex = cursor.getColumnIndex(DESCRIPTION);
             int dateIndex = cursor.getColumnIndex(DATE);
             int isProfitIndex = cursor.getColumnIndex(IS_PROFIT);
             do {
                 float amount = cursor.getFloat(amountIndex);
                 String type = cursor.getString(typeIndex);
+                String desc = cursor.getString(descIndex);
                 long date = cursor.getLong(dateIndex);
                 boolean isProfit = cursor.getInt(isProfitIndex) == 1;
                 if (isProfit) {
@@ -104,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     totalSpend += amount;
                 }
-                Transaction item = new Transaction(amount, type, date, isProfit);
+                Transaction item = new Transaction(amount, type, desc, date, isProfit);
                 mArrayList.add(item);
                 Log.d(LOG_TAG, "readed " + item.toString());
             } while (cursor.moveToNext());

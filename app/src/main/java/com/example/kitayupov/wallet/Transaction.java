@@ -8,24 +8,27 @@ public class Transaction implements Parcelable {
 
     private float amount = 0.f;
     private String type = "";
+    private String description = "";
     private long date = System.currentTimeMillis();
     private boolean isProfit = false;
 
-    public Transaction() {
-    }
-
-    public Transaction(float amount, String type, long date, boolean isProfit) {
+    public Transaction(float amount, String type, String description, long date, boolean isProfit) {
         this.amount = amount;
         this.type = type;
+        this.description = description;
         this.date = date;
         this.isProfit = isProfit;
     }
 
+    public Transaction() {
+    }
+
     protected Transaction(Parcel in) {
-        amount = in.readFloat();
-        type = in.readString();
-        date = in.readLong();
-        isProfit = in.readByte() != 0;
+        setAmount(in.readFloat());
+        setType(in.readString());
+        setDescription(in.readString());
+        setDate(in.readLong());
+        setProfit(in.readByte() != 0);
     }
 
     public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {
@@ -39,6 +42,26 @@ public class Transaction implements Parcelable {
             return new Transaction[size];
         }
     };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeFloat(getAmount());
+        dest.writeString(getType());
+        dest.writeString(getDescription());
+        dest.writeLong(getDate());
+        dest.writeByte((byte) (isProfit() ? 1 : 0));
+    }
+
+    @Override
+    public String toString() {
+        return (isProfit() ? "+" : "-") + String.valueOf(getAmount()) + " " + getType() + " " +
+                getDescription() + " " + DateFormat.format("dd.MM.yyyy", getDate());
+    }
 
     public float getAmount() {
         return amount;
@@ -72,21 +95,11 @@ public class Transaction implements Parcelable {
         isProfit = profit;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getDescription() {
+        return description;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeFloat(amount);
-        dest.writeString(type);
-        dest.writeLong(date);
-        dest.writeByte((byte) (isProfit ? 1 : 0));
-    }
-
-    @Override
-    public String toString() {
-        return (isProfit ? "+" : "-") + String.valueOf(amount) + " " + type + " " + DateFormat.format("dd.MM.yyyy", date);
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
