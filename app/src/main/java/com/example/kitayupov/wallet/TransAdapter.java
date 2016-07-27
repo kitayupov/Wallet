@@ -53,7 +53,7 @@ public class TransAdapter extends BaseAdapter {
 
         amountText.setText(String.valueOf(item.getAmount()));
         typeText.setText(item.getType());
-        dateText.setText(DateFormat.format("dd.MMMM.yyyy", item.getDate()));
+        dateText.setText(DateFormat.format("dd.MM.yyyy", item.getDate()));
 
         if (item.isProfit()) {
             amountText.setTextColor(context.getResources().getColor(R.color.colorProfit));

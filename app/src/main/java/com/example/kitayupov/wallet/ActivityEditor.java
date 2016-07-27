@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class ActivityEditor extends AppCompatActivity implements OnCompleteListener, TextWatcher {
@@ -70,7 +71,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         setButtonListeners();
 
         typeEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
-                Constants.categories));
+                new ArrayList<>(Constants.categories.keySet())));
         typeEditText.addTextChangedListener(this);
 
         descEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,

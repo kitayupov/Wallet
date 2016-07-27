@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -88,7 +89,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readDatabase() {
-        Constants.categories = new ArrayList<>(Arrays.asList(Settings.categories));
+        for (String type : Settings.categories) {
+            Constants.categories = new HashMap<>();
+            Constants.addCategory(type);
+        }
         Constants.descriptions = new ArrayList<>(Arrays.asList(Settings.descriptions));
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(TransDbHelper.TABLE_NAME, null, null, null, null, null, null);
@@ -185,7 +189,8 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         for (Transaction item : list) {
             String whereClause =
-                    AMOUNT + "=? and " + TYPE + "=? and " + DATE + "=? and " + IS_PROFIT + "=?";
+                    AMOUNT + "=? and " + TYPE + "=? and " +
+                            DESCRIPTION + "=? and " + DATE + "=? and " + IS_PROFIT + "=?";
             String[] whereArgs = new String[]{
                     String.valueOf(item.getAmount()), item.getType(),
                     String.valueOf(item.getDate()), String.valueOf(item.isProfit() ? 1 : 0)};

@@ -5,10 +5,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class CategoryListFragment extends DialogFragment {
 
@@ -27,12 +32,20 @@ public class CategoryListFragment extends DialogFragment {
 
     private void getContentView() {
         listView = new ListView(getActivity());
+        final ArrayList<String> types = new ArrayList<>(Constants.categories.keySet());
+        Collections.sort(types, new Comparator<String>() {
+            @Override
+            public int compare(String ls, String rs) {
+                int i = Constants.categories.get(rs) - Constants.categories.get(ls);
+                return i;
+            }
+        });
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1, Constants.categories);
+                android.R.layout.simple_list_item_1, types);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                completeListener.onComplete(Constants.categories.get(i));
+                completeListener.onComplete(types.get(i));
                 dismiss();
             }
         });
