@@ -6,13 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
 import java.util.Calendar;
 
-public class ActivityEditor extends AppCompatActivity {
+public class ActivityEditor extends AppCompatActivity implements OnCompleteListener {
 
     public static final int LAYOUT = R.layout.activity_editor;
 
@@ -22,6 +23,8 @@ public class ActivityEditor extends AppCompatActivity {
     private DatePicker datePicker;
     private RadioButton profitRadio;
     private RadioButton spendRadio;
+
+    private Button button;
 
     private Transaction transaction;
     private int position;
@@ -44,6 +47,8 @@ public class ActivityEditor extends AppCompatActivity {
         datePicker = (DatePicker) findViewById(R.id.datePicker);
         profitRadio = (RadioButton) findViewById(R.id.profit_radio_button);
         spendRadio = (RadioButton) findViewById(R.id.spend_radio_button);
+
+        button = (Button) findViewById(R.id.button);
 
         Intent intent = getIntent();
         position = intent.getIntExtra(MainActivity.POSITION, Integer.MIN_VALUE);
@@ -73,6 +78,12 @@ public class ActivityEditor extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 amountEditText.setTextColor(colorSpend);
+            }
+        });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new CategoryListFragment().show(getFragmentManager(), "Categories");
             }
         });
     }
@@ -152,5 +163,10 @@ public class ActivityEditor extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(MainActivity.POSITION, position);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onComplete(String category) {
+        typeEditText.setText(category);
     }
 }
