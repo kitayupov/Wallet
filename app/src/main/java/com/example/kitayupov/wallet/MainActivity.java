@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -80,14 +81,15 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new TransDbHelper(context);
         mAdapter = new TransAdapter(context, mArrayList);
         mListView = (ListView) findViewById(R.id.transaction_list_view);
-        if (mListView != null) {
-            mListView.setAdapter(mAdapter);
-            readDatabase();
-            registerContextualActionBar();
-        }
+        mListView.setAdapter(mAdapter);
+
+        readDatabase();
+        registerContextualActionBar();
     }
 
     private void readDatabase() {
+        Constants.categories = new ArrayList<>(Arrays.asList(Settings.categories));
+        Constants.descriptions = new ArrayList<>(Arrays.asList(Settings.descriptions));
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(TransDbHelper.TABLE_NAME, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
@@ -99,7 +101,9 @@ public class MainActivity extends AppCompatActivity {
             do {
                 float amount = cursor.getFloat(amountIndex);
                 String type = cursor.getString(typeIndex);
+                Constants.addCategory(type);
                 String desc = cursor.getString(descIndex);
+                Constants.addDescription(desc);
                 long date = cursor.getLong(dateIndex);
                 boolean isProfit = cursor.getInt(isProfitIndex) == 1;
                 if (isProfit) {
@@ -221,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
             ContentValues values = new ContentValues();
             values.put(AMOUNT, item.getAmount());
             values.put(TYPE, item.getType());
+            values.put(DESCRIPTION, item.getDescription());
             values.put(DATE, item.getDate());
             values.put(IS_PROFIT, item.isProfit() ? 1 : 0);
 

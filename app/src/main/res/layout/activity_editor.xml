@@ -39,47 +39,73 @@
                 android:text="@string/spending" />
         </RadioGroup>
 
-        <EditText
-            android:id="@+id/amount_edit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
+        <android.support.design.widget.TextInputLayout
             android:gravity="center"
-            android:inputType="numberDecimal"
-            android:textColor="@color/colorProfit"
-            android:hint="@string/hint_amount" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/amount_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/hint_amount"
+                android:inputType="numberDecimal"
+                android:textColor="@color/colorProfit" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/type_edit_text"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/hint_type"
-                android:inputType="textCapSentences" />
+                android:id="@+id/type_input"
+                android:gravity="center">
 
-            <Button
+                <AutoCompleteTextView
+                    android:id="@+id/type_edit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/hint_type"
+                    android:inputType="textCapSentences" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageView
                 android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/type_edit_text" />
+                android:layout_toEndOf="@+id/type_input"
+                android:padding="5dp"
+                android:src="@drawable/arrow_down_drop_circle" />
+
         </RelativeLayout>
 
-        <EditText
-            android:id="@+id/desc_edit_text"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:gravity="center"
-            android:inputType="textCapSentences"
-            android:hint="@string/hint_description" />
+            android:gravity="center">
+
+            <AutoCompleteTextView
+                android:id="@+id/desc_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/hint_description"
+                android:inputType="textCapSentences" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <DatePicker
             android:id="@+id/datePicker"

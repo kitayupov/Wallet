@@ -3,28 +3,31 @@ package com.example.kitayupov.wallet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
 import java.util.Calendar;
 
-public class ActivityEditor extends AppCompatActivity implements OnCompleteListener {
+public class ActivityEditor extends AppCompatActivity implements OnCompleteListener, TextWatcher {
 
     public static final int LAYOUT = R.layout.activity_editor;
 
     private EditText amountEditText;
-    private EditText typeEditText;
-    private EditText descEditText;
+    private AutoCompleteTextView typeEditText;
+    private AutoCompleteTextView descEditText;
     private DatePicker datePicker;
     private RadioButton profitRadio;
     private RadioButton spendRadio;
 
-    private Button button;
+    private View button;
 
     private Transaction transaction;
     private int position;
@@ -42,13 +45,13 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
 
     private void initialize() {
         amountEditText = (EditText) findViewById(R.id.amount_edit_text);
-        typeEditText = (EditText) findViewById(R.id.type_edit_text);
-        descEditText = (EditText) findViewById(R.id.desc_edit_text);
+        typeEditText = (AutoCompleteTextView) findViewById(R.id.type_edit_text);
+        descEditText = (AutoCompleteTextView) findViewById(R.id.desc_edit_text);
         datePicker = (DatePicker) findViewById(R.id.datePicker);
         profitRadio = (RadioButton) findViewById(R.id.profit_radio_button);
         spendRadio = (RadioButton) findViewById(R.id.spend_radio_button);
 
-        button = (Button) findViewById(R.id.button);
+        button = findViewById(R.id.button);
 
         Intent intent = getIntent();
         position = intent.getIntExtra(MainActivity.POSITION, Integer.MIN_VALUE);
@@ -65,6 +68,15 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         }
 
         setButtonListeners();
+
+        typeEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
+                Constants.categories));
+        typeEditText.addTextChangedListener(this);
+
+        descEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
+                Constants.descriptions));
+        descEditText.addTextChangedListener(this);
+
     }
 
     private void setButtonListeners() {
@@ -113,8 +125,12 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
             }
             transaction = new Transaction();
             transaction.setAmount(Float.parseFloat(string));
-            transaction.setType(typeEditText.getText().toString().trim());
-            transaction.setDescription(descEditText.getText().toString().trim());
+            String type = typeEditText.getText().toString().trim();
+            transaction.setType(type);
+            Constants.addCategory(type);
+            String desc = descEditText.getText().toString().trim();
+            transaction.setDescription(desc);
+            Constants.addDescription(desc);
             transaction.setDate(getDate(datePicker));
             transaction.setProfit(profitRadio.isChecked());
             sendResult(transaction);
@@ -168,5 +184,20 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     @Override
     public void onComplete(String category) {
         typeEditText.setText(category);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 }

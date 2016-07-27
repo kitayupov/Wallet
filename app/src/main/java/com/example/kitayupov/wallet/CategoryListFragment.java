@@ -13,7 +13,6 @@ import android.widget.ListView;
 public class CategoryListFragment extends DialogFragment {
 
     private ListView listView;
-    private String[] categories;
     private OnCompleteListener completeListener;
 
     @Override
@@ -21,20 +20,19 @@ public class CategoryListFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         getContentView();
         builder.setView(listView);
-        builder.setTitle("Select category");
+        builder.setTitle(R.string.label_select_category);
 
         return builder.create();
     }
 
     private void getContentView() {
         listView = new ListView(getActivity());
-        categories = new String[]{"Продукты", "Квартплата", "Одежда", "Транспорт", "Прочее"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1, categories);
+                android.R.layout.simple_list_item_1, Constants.categories);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                completeListener.onComplete(categories[i]);
+                completeListener.onComplete(Constants.categories.get(i));
                 dismiss();
             }
         });

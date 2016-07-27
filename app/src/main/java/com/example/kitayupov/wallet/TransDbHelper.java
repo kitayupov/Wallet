@@ -34,7 +34,8 @@ public class TransDbHelper extends SQLiteOpenHelper {
 
     public static class TransTable implements BaseColumns {
         public static final String CREATE_QUERY = String.format(Locale.ROOT,
-                "create table %s (%s integer primary key autoincrement, %s real, %s text, %s numeric, %s numeric)",
+                "create table %s (%s integer primary key autoincrement, %s real, %s text, " +
+                        "%s text, %s numeric, %s numeric)",
                 TABLE_NAME, _ID, MainActivity.AMOUNT, MainActivity.TYPE,
                 MainActivity.DESCRIPTION, MainActivity.DATE, MainActivity.IS_PROFIT
         );

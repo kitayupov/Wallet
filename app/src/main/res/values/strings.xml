@@ -10,4 +10,5 @@
     <string name="hint_amount">Amount</string>
     <string name="hint_type">Category</string>
     <string name="hint_description">Description</string>
+    <string name="label_select_category">Select category</string>
 </resources>
