@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <stroke
+        android:width="@dimen/toggle_button_stroke"
+        android:color="?android:attr/colorControlNormal" />
+    <corners android:radius="@dimen/toggle_button_radius" />
+    <solid android:color="?android:attr/colorPressedHighlight" />
+</shape>
