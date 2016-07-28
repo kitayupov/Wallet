@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     private EditText amountEditText;
     private AutoCompleteTextView typeEditText;
     private AutoCompleteTextView descEditText;
+    private EditText dateEditText;
     private DatePicker datePicker;
     private RadioButton profitRadio;
     private RadioButton spendRadio;
@@ -56,6 +58,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         amountEditText = (EditText) findViewById(R.id.amount_edit_text);
         typeEditText = (AutoCompleteTextView) findViewById(R.id.type_edit_text);
         descEditText = (AutoCompleteTextView) findViewById(R.id.desc_edit_text);
+        dateEditText = (EditText) findViewById(R.id.date_edit_text);
         datePicker = (DatePicker) findViewById(R.id.datePicker);
         profitRadio = (RadioButton) findViewById(R.id.profit_radio_button);
         spendRadio = (RadioButton) findViewById(R.id.spend_radio_button);
@@ -70,6 +73,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
             amountEditText.setText(String.valueOf(transaction.getAmount()));
             typeEditText.setText(transaction.getType());
             descEditText.setText(transaction.getDescription());
+            dateEditText.setText(DateFormat.format("dd MMM yyyy", transaction.getDate()));
             setDate(transaction.getDate());
             profitRadio.setChecked(transaction.isProfit());
             spendRadio.setChecked(!transaction.isProfit());
