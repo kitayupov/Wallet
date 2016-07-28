@@ -24,7 +24,6 @@ import com.example.kitayupov.wallet.fragments.OnCompleteListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.Map;
 
 public class ActivityEditor extends AppCompatActivity implements OnCompleteListener,
@@ -98,6 +97,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         findViewById(R.id.select_type_button).setOnClickListener(this);
         findViewById(R.id.select_desc_button).setOnClickListener(this);
         findViewById(R.id.set_date_button).setOnClickListener(this);
+        dateEditText.setOnClickListener(this);
     }
 
     @Override
@@ -221,6 +221,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
                 dialogFragment.show(getFragmentManager(), "Descriptions");
                 break;
             case R.id.set_date_button:
+            case R.id.date_edit_text:
                 new DatePickerDialog(ActivityEditor.this, d,
                         calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),

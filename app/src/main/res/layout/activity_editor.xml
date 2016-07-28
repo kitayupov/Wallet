@@ -13,15 +13,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/widget_margin_primary"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_margin="@dimen/widget_vertical_margin"
+            android:layout_marginEnd="@dimen/widget_horizontal_margin"
+            android:layout_marginStart="@dimen/widget_horizontal_margin"
             android:background="@drawable/track_selector"
             android:orientation="horizontal">
 
@@ -34,8 +33,8 @@
                 android:button="@null"
                 android:gravity="center"
                 android:checked="true"
-                android:paddingBottom="@dimen/widget_margin_primary"
-                android:paddingTop="@dimen/widget_margin_primary"
+                android:paddingBottom="@dimen/widget_vertical_margin"
+                android:paddingTop="@dimen/widget_vertical_margin"
                 android:text="@string/profit" />
 
             <RadioButton
@@ -47,21 +46,28 @@
                 android:gravity="center"
                 android:button="@null"
                 android:checked="false"
-                android:paddingBottom="@dimen/widget_margin_primary"
-                android:paddingTop="@dimen/widget_margin_primary"
+                android:paddingBottom="@dimen/widget_vertical_margin"
+                android:paddingTop="@dimen/widget_vertical_margin"
                 android:text="@string/spending" />
         </RadioGroup>
 
-        <android.support.design.widget.TextInputLayout
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/amount_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="5dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/amount_edit_text"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:gravity="center"
                 android:hint="@string/hint_amount"
                 android:inputType="numberDecimal"
@@ -69,22 +75,33 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <RelativeLayout
+            <ImageView
+                android:id="@+id/calculate_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="5dp"
+                android:src="@drawable/calculator" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:id="@+id/type_input"
+                android:padding="5dp"
                 android:gravity="center">
 
                 <AutoCompleteTextView
                     android:id="@+id/type_edit_text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
                     android:gravity="center"
                     android:hint="@string/hint_type"
                     android:inputType="textCapSentences|textMultiLine" />
@@ -95,30 +112,28 @@
                 android:id="@+id/select_type_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/type_input"
                 android:padding="5dp"
                 android:src="@drawable/clipboard" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:id="@+id/desc_input"
-                android:layout_centerInParent="true"
+                android:padding="5dp"
                 android:gravity="center">
 
                 <AutoCompleteTextView
                     android:id="@+id/desc_edit_text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
                     android:gravity="center"
                     android:hint="@string/hint_description"
                     android:inputType="textCapSentences|textMultiLine" />
@@ -129,30 +144,28 @@
                 android:id="@+id/select_desc_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:layout_toEndOf="@+id/desc_input"
                 android:padding="5dp"
                 android:src="@drawable/clipboard" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:id="@+id/date_input"
-                android:layout_centerInParent="true"
+                android:padding="5dp"
                 android:gravity="center">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/date_edit_text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
                     android:focusable="false"
                     android:gravity="center"
                     android:hint="@string/hint_date"
@@ -164,13 +177,10 @@
                 android:id="@+id/set_date_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:layout_toEndOf="@+id/date_input"
                 android:padding="5dp"
                 android:src="@drawable/calendar" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

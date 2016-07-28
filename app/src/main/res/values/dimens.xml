@@ -8,5 +8,6 @@
     <dimen name="radio_button_stroke">2dp</dimen>
     <dimen name="toggle_button_radius">10dp</dimen>
     <dimen name="toggle_button_stroke">2dp</dimen>
-    <dimen name="widget_margin_primary">10dp</dimen>
+    <dimen name="widget_vertical_margin">10dp</dimen>
+    <dimen name="widget_horizontal_margin">16dp</dimen>
 </resources>
