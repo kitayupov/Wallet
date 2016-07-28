@@ -7,6 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/colorBackground"
     tools:context="com.example.kitayupov.wallet.ActivityEditor">
 
     <LinearLayout
@@ -86,7 +87,7 @@
                     android:ems="10"
                     android:gravity="center"
                     android:hint="@string/hint_type"
-                    android:inputType="textCapSentences" />
+                    android:inputType="textCapSentences|textMultiLine" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -120,7 +121,7 @@
                     android:ems="10"
                     android:gravity="center"
                     android:hint="@string/hint_description"
-                    android:inputType="textCapSentences" />
+                    android:inputType="textCapSentences|textMultiLine" />
 
             </android.support.design.widget.TextInputLayout>
 

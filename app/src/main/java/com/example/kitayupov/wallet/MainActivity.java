@@ -25,11 +25,10 @@ import com.example.kitayupov.wallet.dto.TransDbHelper;
 import com.example.kitayupov.wallet.dto.Transaction;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int LAYOUT = R.layout.activity_main;
 
@@ -82,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
         profitTextView = (TextView) findViewById(R.id.profit_text_view);
         spendTextView = (TextView) findViewById(R.id.spend_text_view);
         totalTextView = (TextView) findViewById(R.id.total_text_view);
+
+        profitTextView.setOnClickListener(this);
+        spendTextView.setOnClickListener(this);
 
         mArrayList = new ArrayList<>();
         dbHelper = new TransDbHelper(context);
@@ -315,6 +317,21 @@ public class MainActivity extends AppCompatActivity {
             return String.format(Locale.ROOT, "%d", (long) f);
         } else {
             return String.format("%s", f);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(this, StatisticsActivity.class);
+        switch (view.getId()) {
+            case R.id.profit_text_view:
+                intent.putExtra(IS_PROFIT, true);
+                startActivity(intent);
+                break;
+            case R.id.spend_text_view:
+                intent.putExtra(IS_PROFIT, false);
+                startActivity(intent);
+                break;
         }
     }
 }

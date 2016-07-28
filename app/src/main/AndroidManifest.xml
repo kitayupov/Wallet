@@ -20,6 +20,8 @@
         <activity
             android:name=".ActivityEditor"
             android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".StatisticsActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>
