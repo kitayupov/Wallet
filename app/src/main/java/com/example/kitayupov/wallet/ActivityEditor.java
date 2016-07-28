@@ -23,6 +23,7 @@ import com.example.kitayupov.wallet.fragments.OnCompleteListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Map;
 
 public class ActivityEditor extends AppCompatActivity implements OnCompleteListener,
@@ -69,16 +70,19 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         position = intent.getIntExtra(MainActivity.POSITION, Integer.MIN_VALUE);
         transaction = intent.getParcelableExtra(Transaction.class.getCanonicalName());
 
-        if (transaction != null) {
-            amountEditText.setText(String.valueOf(transaction.getAmount()));
-            typeEditText.setText(transaction.getType());
-            descEditText.setText(transaction.getDescription());
-            dateEditText.setText(DateFormat.format("dd MMM yyyy", transaction.getDate()));
-            setDate(transaction.getDate());
-            profitRadio.setChecked(transaction.isProfit());
-            spendRadio.setChecked(!transaction.isProfit());
-            amountEditText.setTextColor(transaction.isProfit() ? colorProfit : colorSpend);
+        if (transaction == null) {
+            transaction = new Transaction();
         }
+
+        float amount = transaction.getAmount();
+        amountEditText.setText(amount != 0f ? stringFormat(amount) : null);
+        typeEditText.setText(transaction.getType());
+        descEditText.setText(transaction.getDescription());
+        dateEditText.setText(DateFormat.format("dd MMM yyyy", transaction.getDate()));
+        setDate(transaction.getDate());
+        profitRadio.setChecked(transaction.isProfit());
+        spendRadio.setChecked(!transaction.isProfit());
+        amountEditText.setTextColor(transaction.isProfit() ? colorProfit : colorSpend);
 
         setButtonListeners();
 
@@ -141,7 +145,6 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
             if (string.contains(".") && string.indexOf(".") + 2 < string.length() - 1) {
                 string = string.substring(0, string.indexOf(".") + 3);
             }
-            transaction = new Transaction();
             transaction.setAmount(Float.parseFloat(string));
             String type = typeEditText.getText().toString().trim();
             transaction.setType(type);
@@ -230,5 +233,13 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         typeEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
                 new ArrayList<>(map.keySet())));
         typeEditText.addTextChangedListener(this);
+    }
+
+    private String stringFormat(float f) {
+        if (f == (long) f) {
+            return String.format(Locale.ROOT, "%d", (long) f);
+        } else {
+            return String.format("%s", f);
+        }
     }
 }

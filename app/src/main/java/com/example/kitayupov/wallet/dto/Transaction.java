@@ -10,7 +10,7 @@ public class Transaction implements Parcelable {
     private String type = "";
     private String description = "";
     private long date = System.currentTimeMillis();
-    private boolean isProfit = false;
+    private boolean isProfit = true;
 
     public Transaction(float amount, String type, String description, long date, boolean isProfit) {
         this.amount = amount;
