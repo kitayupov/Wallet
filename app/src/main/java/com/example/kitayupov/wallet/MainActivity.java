@@ -89,9 +89,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readDatabase() {
-        for (String type : Settings.categories) {
-            Constants.categories = new HashMap<>();
-            Constants.addCategory(type);
+        for (String type : Settings.profitArray) {
+            Constants.profitMap = new HashMap<>();
+            Constants.addType(true, type);
+        }
+        for (String type : Settings.spendArray) {
+            Constants.spendMap = new HashMap<>();
+            Constants.addType(false, type);
         }
         Constants.descriptions = new ArrayList<>(Arrays.asList(Settings.descriptions));
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -105,11 +109,11 @@ public class MainActivity extends AppCompatActivity {
             do {
                 float amount = cursor.getFloat(amountIndex);
                 String type = cursor.getString(typeIndex);
-                Constants.addCategory(type);
                 String desc = cursor.getString(descIndex);
                 Constants.addDescription(desc);
                 long date = cursor.getLong(dateIndex);
                 boolean isProfit = cursor.getInt(isProfitIndex) == 1;
+                Constants.addType(isProfit, type);
                 if (isProfit) {
                     totalProfit += amount;
                 } else {

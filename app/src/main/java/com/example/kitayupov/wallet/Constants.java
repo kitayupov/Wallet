@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Constants {
-    public static Map<String, Integer> categories;
+    public static Map<String, Integer> profitMap;
+    public static Map<String, Integer> spendMap;
     public static ArrayList<String> descriptions;
 
-    public static void addCategory(String type) {
+    public static void addType(boolean isProfit, String type) {
+        Map<String, Integer> map = isProfit ? profitMap : spendMap;
         if (!"".equals(type)) {
-            if (categories.containsKey(type)) {
-                categories.put(type, categories.get(type) + 1);
+            if (map.containsKey(type)) {
+                map.put(type, map.get(type) + 1);
             } else {
-                categories.put(type, 1);
+                map.put(type, 1);
             }
         }
     }

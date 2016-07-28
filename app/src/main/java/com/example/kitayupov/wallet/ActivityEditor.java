@@ -1,5 +1,6 @@
 package com.example.kitayupov.wallet;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,14 +11,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Map;
 
-public class ActivityEditor extends AppCompatActivity implements OnCompleteListener, TextWatcher {
+public class ActivityEditor extends AppCompatActivity implements OnCompleteListener,
+        CompoundButton.OnCheckedChangeListener, TextWatcher {
 
     public static final int LAYOUT = R.layout.activity_editor;
 
@@ -70,9 +74,10 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
 
         setButtonListeners();
 
-        typeEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
-                new ArrayList<>(Constants.categories.keySet())));
-        typeEditText.addTextChangedListener(this);
+        profitRadio.setOnCheckedChangeListener(this);
+        spendRadio.setOnCheckedChangeListener(this);
+
+        setTypeAutoCompleteArray(profitRadio.isChecked());
 
         descEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
                 Constants.descriptions));
@@ -96,7 +101,11 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new CategoryListFragment().show(getFragmentManager(), "Categories");
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(MainActivity.IS_PROFIT, profitRadio.isChecked());
+                DialogFragment dialogFragment = new CategoryListFragment();
+                dialogFragment.setArguments(bundle);
+                dialogFragment.show(getFragmentManager(), "Categories");
             }
         });
     }
@@ -128,12 +137,13 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
             transaction.setAmount(Float.parseFloat(string));
             String type = typeEditText.getText().toString().trim();
             transaction.setType(type);
-            Constants.addCategory(type);
             String desc = descEditText.getText().toString().trim();
             transaction.setDescription(desc);
-            Constants.addDescription(desc);
             transaction.setDate(getDate(datePicker));
-            transaction.setProfit(profitRadio.isChecked());
+            boolean isProfit = profitRadio.isChecked();
+            transaction.setProfit(isProfit);
+            Constants.addType(isProfit, type);
+            Constants.addDescription(desc);
             sendResult(transaction);
         } else {
             amountEditText.setError(getString(R.string.message_empty_field));
@@ -200,5 +210,17 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     @Override
     public void afterTextChanged(Editable editable) {
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+        setTypeAutoCompleteArray(profitRadio.isChecked());
+    }
+
+    private void setTypeAutoCompleteArray(boolean isProfit) {
+        Map<String, Integer> map = isProfit ? Constants.profitMap : Constants.spendMap;
+        typeEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
+                new ArrayList<>(map.keySet())));
+        typeEditText.addTextChangedListener(this);
     }
 }

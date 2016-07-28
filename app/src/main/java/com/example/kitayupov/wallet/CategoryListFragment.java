@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +13,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
 
 public class CategoryListFragment extends DialogFragment {
 
@@ -23,21 +23,21 @@ public class CategoryListFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        getContentView();
+        getContentView(getArguments().getBoolean(MainActivity.IS_PROFIT));
         builder.setView(listView);
         builder.setTitle(R.string.label_select_category);
 
         return builder.create();
     }
 
-    private void getContentView() {
+    private void getContentView(boolean isProfit) {
         listView = new ListView(getActivity());
-        final ArrayList<String> types = new ArrayList<>(Constants.categories.keySet());
+        final Map<String, Integer> map = isProfit ? Constants.profitMap : Constants.spendMap;
+        final ArrayList<String> types = new ArrayList<>(map.keySet());
         Collections.sort(types, new Comparator<String>() {
             @Override
             public int compare(String ls, String rs) {
-                int i = Constants.categories.get(rs) - Constants.categories.get(ls);
-                return i;
+                return map.get(rs) - map.get(ls);
             }
         });
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),

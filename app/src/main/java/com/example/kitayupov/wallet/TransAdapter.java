@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class TransAdapter extends BaseAdapter {
 
@@ -51,7 +52,7 @@ public class TransAdapter extends BaseAdapter {
         TextView typeText = (TextView) view.findViewById(R.id.type_text_view);
         TextView dateText = (TextView) view.findViewById(R.id.date_text_view);
 
-        amountText.setText(String.valueOf(item.getAmount()));
+        amountText.setText(format(item.getAmount()));
         typeText.setText(item.getType());
         dateText.setText(DateFormat.format("dd.MM.yyyy", item.getDate()));
 
@@ -59,6 +60,14 @@ public class TransAdapter extends BaseAdapter {
             amountText.setTextColor(context.getResources().getColor(R.color.colorProfit));
         } else {
             amountText.setTextColor(context.getResources().getColor(R.color.colorSpend));
+        }
+    }
+
+    public static String format(float f) {
+        if (f == (long) f) {
+            return String.format(Locale.ROOT, "%d", (long) f);
+        } else {
+            return String.format("%s", f);
         }
     }
 }
