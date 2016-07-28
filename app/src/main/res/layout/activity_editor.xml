@@ -86,7 +86,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/type_input"
                 android:padding="5dp"
-                android:src="@drawable/arrow_down_drop_circle" />
+                android:src="@drawable/clipboard" />
 
         </RelativeLayout>
 
@@ -120,7 +120,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_toEndOf="@+id/desc_input"
                 android:padding="5dp"
-                android:src="@drawable/arrow_down_drop_circle" />
+                android:src="@drawable/clipboard" />
 
         </RelativeLayout>
 
@@ -155,7 +155,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_toEndOf="@+id/date_input"
                 android:padding="5dp"
-                android:src="@drawable/arrow_down_drop_circle" />
+                android:src="@drawable/calendar" />
 
         </RelativeLayout>
 
