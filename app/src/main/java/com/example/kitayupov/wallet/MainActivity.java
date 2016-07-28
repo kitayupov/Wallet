@@ -84,19 +84,23 @@ public class MainActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.transaction_list_view);
         mListView.setAdapter(mAdapter);
 
+        getTypeMaps();
         readDatabase();
         registerContextualActionBar();
     }
 
-    private void readDatabase() {
+    private void getTypeMaps() {
+        Constants.profitMap = new HashMap<>();
+        Constants.spendMap = new HashMap<>();
         for (String type : Settings.profitArray) {
-            Constants.profitMap = new HashMap<>();
             Constants.addType(true, type);
         }
         for (String type : Settings.spendArray) {
-            Constants.spendMap = new HashMap<>();
             Constants.addType(false, type);
         }
+    }
+
+    private void readDatabase() {
         Constants.descriptions = new ArrayList<>(Arrays.asList(Settings.descriptions));
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(TransDbHelper.TABLE_NAME, null, null, null, null, null, null);
