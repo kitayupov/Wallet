@@ -27,6 +27,7 @@ import com.example.kitayupov.wallet.dto.Transaction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -280,9 +281,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setTotal() {
-        profitTextView.setText(String.valueOf(totalProfit));
-        spendTextView.setText(String.valueOf(totalSpend));
-        totalTextView.setText(String.valueOf(totalProfit - totalSpend));
+        profitTextView.setText(stringFormat(totalProfit));
+        spendTextView.setText(stringFormat(totalSpend));
+        totalTextView.setText(stringFormat(totalProfit - totalSpend));
     }
 
     @Override
@@ -295,7 +296,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_clear:
-//                deleteTransaction(mArrayList);
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 db.execSQL("delete from " + TransDbHelper.TABLE_NAME);
                 mArrayList.clear();
@@ -307,6 +307,14 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public static String stringFormat(float f) {
+        if (f == (long) f) {
+            return String.format(Locale.ROOT, "%d", (long) f);
+        } else {
+            return String.format("%s", f);
         }
     }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.kitayupov.wallet.MainActivity;
 import com.example.kitayupov.wallet.R;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class TransAdapter extends BaseAdapter {
         TextView typeText = (TextView) view.findViewById(R.id.type_text_view);
         TextView dateText = (TextView) view.findViewById(R.id.date_text_view);
 
-        amountText.setText(stringFormat(item.getAmount()));
+        amountText.setText(MainActivity.stringFormat(item.getAmount()));
         typeText.setText(item.getType());
         dateText.setText(DateFormat.format("dd.MM.yyyy", item.getDate()));
 
@@ -62,14 +63,6 @@ public class TransAdapter extends BaseAdapter {
             amountText.setTextColor(context.getResources().getColor(R.color.colorProfit));
         } else {
             amountText.setTextColor(context.getResources().getColor(R.color.colorSpend));
-        }
-    }
-
-    private String stringFormat(float f) {
-        if (f == (long) f) {
-            return String.format(Locale.ROOT, "%d", (long) f);
-        } else {
-            return String.format("%s", f);
         }
     }
 }

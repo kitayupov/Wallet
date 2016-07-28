@@ -73,7 +73,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         }
 
         float amount = transaction.getAmount();
-        amountEditText.setText(amount != 0f ? stringFormat(amount) : null);
+        amountEditText.setText(amount != 0f ? MainActivity.stringFormat(amount) : null);
         typeEditText.setText(transaction.getType());
         descEditText.setText(transaction.getDescription());
         setDate(transaction.getDate());
@@ -205,14 +205,6 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         typeEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
                 new ArrayList<>(map.keySet())));
         typeEditText.addTextChangedListener(this);
-    }
-
-    private String stringFormat(float f) {
-        if (f == (long) f) {
-            return String.format(Locale.ROOT, "%d", (long) f);
-        } else {
-            return String.format("%s", f);
-        }
     }
 
     @Override
