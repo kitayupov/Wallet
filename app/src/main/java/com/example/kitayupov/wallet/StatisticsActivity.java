@@ -4,10 +4,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.kitayupov.wallet.dto.TransDbHelper;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,43 +26,81 @@ public class StatisticsActivity extends AppCompatActivity {
     private Map<String, Float> map;
     private TextView statistics;
     private boolean isProfit;
-    private float total;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
-
-        isProfit = getIntent().getBooleanExtra(MainActivity.IS_PROFIT, true);
-        statistics = (TextView) findViewById(R.id.statistics);
-
-        map = new HashMap<>();
-        readDatabase();
+        initialize();
+        readDatabase(0);
     }
 
-    private void readDatabase() {
+    private void initialize() {
+        isProfit = getIntent().getBooleanExtra(MainActivity.IS_PROFIT, true);
+        statistics = (TextView) findViewById(R.id.statistics);
+        calendar = Calendar.getInstance();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_statistics, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        long startDate;
+        switch (item.getItemId()) {
+            case R.id.menu_total:
+                startDate = 0;
+                break;
+            case R.id.menu_year:
+                calendar.set(Calendar.DAY_OF_YEAR, 1);
+                startDate = calendar.getTimeInMillis();
+                break;
+            case R.id.menu_month:
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                startDate = calendar.getTimeInMillis();
+                break;
+            case R.id.menu_week:
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                startDate = calendar.getTimeInMillis();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        readDatabase(startDate);
+        return true;
+    }
+
+    private void readDatabase(long startDate) {
+        float total = 0f;
+        map = new HashMap<>();
         TransDbHelper dbHelper = new TransDbHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(TransDbHelper.TABLE_NAME, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             int amountIndex = cursor.getColumnIndex(MainActivity.AMOUNT);
             int typeIndex = cursor.getColumnIndex(MainActivity.TYPE);
+            int dateIndex = cursor.getColumnIndex(MainActivity.DATE);
             int isProfitIndex = cursor.getColumnIndex(MainActivity.IS_PROFIT);
             do {
                 float amount = cursor.getFloat(amountIndex);
                 String type = cursor.getString(typeIndex);
+                long date = cursor.getLong(dateIndex);
                 boolean isProfit = cursor.getInt(isProfitIndex) == 1;
-                if (this.isProfit == isProfit) {
+                if (this.isProfit == isProfit && date > startDate) {
                     Constants.addTypeAmount(map, type, amount);
                     total += amount;
                 }
             } while (cursor.moveToNext());
             cursor.close();
-            setTotal();
+            setResult(total);
         }
     }
 
-    private void setTotal() {
+    private void setResult(float total) {
         StringBuilder builder = new StringBuilder();
         Map<String, Float> sortedMap = sortByValue(map);
         for (String type : sortedMap.keySet()) {
