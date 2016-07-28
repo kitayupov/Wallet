@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     AMOUNT + "=? and " + TYPE + "=? and " +
                             DESCRIPTION + "=? and " + DATE + "=? and " + IS_PROFIT + "=?";
             String[] whereArgs = new String[]{
-                    String.valueOf(item.getAmount()), item.getType(),
+                    String.valueOf(item.getAmount()), item.getType(), item.getDescription(),
                     String.valueOf(item.getDate()), String.valueOf(item.isProfit() ? 1 : 0)};
             db.delete(TransDbHelper.TABLE_NAME, whereClause, whereArgs);
             mArrayList.remove(item);
