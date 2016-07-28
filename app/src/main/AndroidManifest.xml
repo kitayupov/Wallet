@@ -17,7 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityEditor" />
+        <activity
+            android:name=".ActivityEditor"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

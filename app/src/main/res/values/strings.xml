@@ -12,4 +12,5 @@
     <string name="hint_description">Description</string>
     <string name="label_select_category">Select category</string>
     <string name="hint_date">Date</string>
+    <string name="label_select_description">Select description</string>
 </resources>

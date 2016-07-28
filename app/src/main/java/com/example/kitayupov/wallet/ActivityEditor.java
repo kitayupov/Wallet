@@ -1,5 +1,6 @@
 package com.example.kitayupov.wallet;
 
+import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ActivityEditor extends AppCompatActivity implements OnCompleteListener,
-        CompoundButton.OnCheckedChangeListener, TextWatcher {
+        CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener {
 
     public static final int LAYOUT = R.layout.activity_editor;
 
@@ -35,21 +36,21 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     private AutoCompleteTextView typeEditText;
     private AutoCompleteTextView descEditText;
     private EditText dateEditText;
-    private DatePicker datePicker;
     private RadioButton profitRadio;
     private RadioButton spendRadio;
-
-    private View button;
 
     private Transaction transaction;
     private int position;
     private int colorProfit;
     private int colorSpend;
 
+    private Calendar calendar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
+        calendar = Calendar.getInstance();
         colorProfit = getResources().getColor(R.color.colorProfit);
         colorSpend = getResources().getColor(R.color.colorSpend);
         initialize();
@@ -60,11 +61,8 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         typeEditText = (AutoCompleteTextView) findViewById(R.id.type_edit_text);
         descEditText = (AutoCompleteTextView) findViewById(R.id.desc_edit_text);
         dateEditText = (EditText) findViewById(R.id.date_edit_text);
-        datePicker = (DatePicker) findViewById(R.id.datePicker);
         profitRadio = (RadioButton) findViewById(R.id.profit_radio_button);
         spendRadio = (RadioButton) findViewById(R.id.spend_radio_button);
-
-        button = findViewById(R.id.button);
 
         Intent intent = getIntent();
         position = intent.getIntExtra(MainActivity.POSITION, Integer.MIN_VALUE);
@@ -78,7 +76,6 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         amountEditText.setText(amount != 0f ? stringFormat(amount) : null);
         typeEditText.setText(transaction.getType());
         descEditText.setText(transaction.getDescription());
-        dateEditText.setText(DateFormat.format("dd MMM yyyy", transaction.getDate()));
         setDate(transaction.getDate());
         profitRadio.setChecked(transaction.isProfit());
         spendRadio.setChecked(!transaction.isProfit());
@@ -92,34 +89,15 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         setTypeAutoCompleteArray(profitRadio.isChecked());
 
         descEditText.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line,
-                Constants.descriptions));
+                new ArrayList<>(Constants.descriptionMap.keySet())));
         descEditText.addTextChangedListener(this);
 
     }
 
     private void setButtonListeners() {
-        profitRadio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                amountEditText.setTextColor(colorProfit);
-            }
-        });
-        spendRadio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                amountEditText.setTextColor(colorSpend);
-            }
-        });
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(MainActivity.IS_PROFIT, profitRadio.isChecked());
-                DialogFragment dialogFragment = new CategoryListFragment();
-                dialogFragment.setArguments(bundle);
-                dialogFragment.show(getFragmentManager(), "Categories");
-            }
-        });
+        findViewById(R.id.select_type_button).setOnClickListener(this);
+        findViewById(R.id.select_desc_button).setOnClickListener(this);
+        findViewById(R.id.set_date_button).setOnClickListener(this);
     }
 
     @Override
@@ -150,7 +128,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
             transaction.setType(type);
             String desc = descEditText.getText().toString().trim();
             transaction.setDescription(desc);
-            transaction.setDate(getDate(datePicker));
+            transaction.setDate(calendar.getTimeInMillis());
             boolean isProfit = profitRadio.isChecked();
             transaction.setProfit(isProfit);
             Constants.addType(isProfit, type);
@@ -162,14 +140,8 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     }
 
     private void setDate(long date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(date);
-
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-
-        datePicker.updateDate(year, month, day);
+        calendar.setTimeInMillis(date);
+        dateEditText.setText(DateFormat.format("dd MMM yyyy", calendar.getTimeInMillis()));
     }
 
     private long getDate(DatePicker datePicker) {
@@ -177,7 +149,6 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         int month = datePicker.getMonth();
         int year = datePicker.getYear();
 
-        Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day);
 
         return calendar.getTime().getTime();
@@ -226,6 +197,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
         setTypeAutoCompleteArray(profitRadio.isChecked());
+        amountEditText.setTextColor(profitRadio.isChecked() ? colorProfit : colorSpend);
     }
 
     private void setTypeAutoCompleteArray(boolean isProfit) {
@@ -242,4 +214,37 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
             return String.format("%s", f);
         }
     }
+
+    @Override
+    public void onClick(View view) {
+        DialogFragment dialogFragment = new CategoryListFragment();
+        switch (view.getId()) {
+            case R.id.select_type_button:
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(MainActivity.IS_PROFIT, profitRadio.isChecked());
+                dialogFragment.setArguments(bundle);
+                dialogFragment.show(getFragmentManager(), "Categories");
+                break;
+            case R.id.select_desc_button:
+                dialogFragment.show(getFragmentManager(), "Descriptions");
+                break;
+            case R.id.set_date_button:
+                new DatePickerDialog(ActivityEditor.this, d,
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH))
+                        .show();
+                break;
+        }
+    }
+
+    // Обрабатывает выбор даты
+    private DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, monthOfYear);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            setDate(calendar.getTimeInMillis());
+        }
+    };
 }

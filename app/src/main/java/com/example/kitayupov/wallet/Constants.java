@@ -6,7 +6,7 @@ import java.util.Map;
 public class Constants {
     public static Map<String, Integer> profitMap;
     public static Map<String, Integer> spendMap;
-    public static ArrayList<String> descriptions;
+    public static Map<String, Integer> descriptionMap;
 
     public static void addType(boolean isProfit, String type) {
         Map<String, Integer> map = isProfit ? profitMap : spendMap;
@@ -20,8 +20,12 @@ public class Constants {
     }
 
     public static void addDescription(String desc) {
-        if (!"".equals(desc) && !descriptions.contains(desc)) {
-            descriptions.add(desc);
+        if (!"".equals(desc)) {
+            if (descriptionMap.containsKey(desc)) {
+                descriptionMap.put(desc, descriptionMap.get(desc) + 1);
+            } else {
+                descriptionMap.put(desc, 1);
+            }
         }
     }
 }

@@ -96,16 +96,19 @@ public class MainActivity extends AppCompatActivity {
     private void getTypeMaps() {
         Constants.profitMap = new HashMap<>();
         Constants.spendMap = new HashMap<>();
+        Constants.descriptionMap = new HashMap<>();
         for (String type : Settings.profitArray) {
             Constants.addType(true, type);
         }
         for (String type : Settings.spendArray) {
             Constants.addType(false, type);
         }
+        for (String type : Settings.descriptions) {
+            Constants.addDescription(type);
+        }
     }
 
     private void readDatabase() {
-        Constants.descriptions = new ArrayList<>(Arrays.asList(Settings.descriptions));
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(TransDbHelper.TABLE_NAME, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {

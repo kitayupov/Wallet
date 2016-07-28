@@ -58,8 +58,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="wrap_content"
@@ -80,7 +79,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <ImageView
-                android:id="@+id/button"
+                android:id="@+id/select_type_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
@@ -91,45 +90,74 @@
 
         </RelativeLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <AutoCompleteTextView
-                android:id="@+id/desc_edit_text"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/hint_description"
-                android:inputType="textCapSentences" />
+                android:id="@+id/desc_input"
+                android:layout_centerInParent="true"
+                android:gravity="center">
 
-        </android.support.design.widget.TextInputLayout>
+                <AutoCompleteTextView
+                    android:id="@+id/desc_edit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/hint_description"
+                    android:inputType="textCapSentences" />
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center">
+            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/date_edit_text"
+            <ImageView
+                android:id="@+id/select_desc_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toEndOf="@+id/desc_input"
+                android:padding="5dp"
+                android:src="@drawable/arrow_down_drop_circle" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="center"
-                android:focusable="false"
-                android:hint="@string/hint_date"
-                android:inputType="textCapSentences" />
+                android:id="@+id/date_input"
+                android:layout_centerInParent="true"
+                android:gravity="center">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/date_edit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:gravity="center"
+                    android:hint="@string/hint_date"
+                    android:inputType="textCapSentences" />
 
-        <DatePicker
-            android:id="@+id/datePicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:calendarViewShown="false"
-            android:datePickerMode="spinner" />
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/set_date_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toEndOf="@+id/date_input"
+                android:padding="5dp"
+                android:src="@drawable/arrow_down_drop_circle" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

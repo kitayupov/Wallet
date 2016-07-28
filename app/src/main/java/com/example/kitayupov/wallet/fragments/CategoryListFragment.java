@@ -27,16 +27,22 @@ public class CategoryListFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        getContentView(getArguments().getBoolean(MainActivity.IS_PROFIT));
+        if (getArguments() != null && getArguments().containsKey(MainActivity.IS_PROFIT)) {
+            boolean isProfit = getArguments().getBoolean(MainActivity.IS_PROFIT);
+            final Map<String, Integer> map = isProfit ? Constants.profitMap : Constants.spendMap;
+            getContentView(map);
+            builder.setTitle(R.string.label_select_category);
+        } else {
+            getContentView(Constants.descriptionMap);
+            builder.setTitle(R.string.label_select_description);
+        }
         builder.setView(listView);
-        builder.setTitle(R.string.label_select_category);
 
         return builder.create();
     }
 
-    private void getContentView(boolean isProfit) {
+    private void getContentView(final Map<String, Integer> map) {
         listView = new ListView(getActivity());
-        final Map<String, Integer> map = isProfit ? Constants.profitMap : Constants.spendMap;
         final ArrayList<String> types = new ArrayList<>(map.keySet());
         Collections.sort(types, new Comparator<String>() {
             @Override

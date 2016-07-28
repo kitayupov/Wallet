@@ -12,4 +12,5 @@
     <string name="hint_description">Описание</string>
     <string name="label_select_category">Выберите категорию</string>
     <string name="hint_date">Дата</string>
+    <string name="label_select_description">Выберите описание</string>
 </resources>
