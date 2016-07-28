@@ -1,4 +1,4 @@
-package com.example.kitayupov.wallet;
+package com.example.kitayupov.wallet.dto;
 
 import android.content.Context;
 import android.text.format.DateFormat;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.kitayupov.wallet.R;
 
 import java.util.ArrayList;
 import java.util.Locale;

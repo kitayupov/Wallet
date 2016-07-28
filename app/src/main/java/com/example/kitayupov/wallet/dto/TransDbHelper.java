@@ -1,9 +1,11 @@
-package com.example.kitayupov.wallet;
+package com.example.kitayupov.wallet.dto;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+
+import com.example.kitayupov.wallet.MainActivity;
 
 import java.util.Locale;
 

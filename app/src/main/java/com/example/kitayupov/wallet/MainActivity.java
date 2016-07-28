@@ -20,6 +20,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.kitayupov.wallet.dto.TransAdapter;
+import com.example.kitayupov.wallet.dto.TransDbHelper;
+import com.example.kitayupov.wallet.dto.Transaction;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

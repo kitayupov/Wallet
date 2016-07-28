@@ -1,4 +1,4 @@
-package com.example.kitayupov.wallet;
+package com.example.kitayupov.wallet.dto;
 
 import android.os.Parcel;
 import android.os.Parcelable;

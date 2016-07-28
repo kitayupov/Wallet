@@ -16,6 +16,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import com.example.kitayupov.wallet.dto.Transaction;
+import com.example.kitayupov.wallet.fragments.CategoryListFragment;
+import com.example.kitayupov.wallet.fragments.OnCompleteListener;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;

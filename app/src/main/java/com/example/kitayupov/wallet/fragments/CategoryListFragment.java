@@ -1,4 +1,4 @@
-package com.example.kitayupov.wallet;
+package com.example.kitayupov.wallet.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,6 +9,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.kitayupov.wallet.Constants;
+import com.example.kitayupov.wallet.MainActivity;
+import com.example.kitayupov.wallet.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
