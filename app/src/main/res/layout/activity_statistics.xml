@@ -3,18 +3,124 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/colorBackground"
+    android:orientation="vertical"
     tools:context=".StatisticsActivity">
 
-    <TextView
-        android:id="@+id/statistics"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/toolbar_top"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimaryDark"
+        android:elevation="5dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/widget_vertical_margin"
+            android:layout_marginEnd="@dimen/widget_horizontal_margin"
+            android:layout_marginStart="@dimen/widget_horizontal_margin"
+            android:background="@drawable/track_selector"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/total_radio_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/radio_selector"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:paddingBottom="@dimen/widget_vertical_margin"
+                android:paddingTop="@dimen/widget_vertical_margin"
+                android:text="Total" />
+
+            <RadioButton
+                android:id="@+id/year_radio_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/radio_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingBottom="@dimen/widget_vertical_margin"
+                android:paddingTop="@dimen/widget_vertical_margin"
+                android:text="Year" />
+
+            <RadioButton
+                android:id="@+id/month_radio_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/radio_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingBottom="@dimen/widget_vertical_margin"
+                android:paddingTop="@dimen/widget_vertical_margin"
+                android:text="Month" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_centerInParent="true" />
+        android:layout_above="@+id/toolbar_bottom"
+        android:layout_below="@+id/toolbar_top"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/toolbar_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark"
+        android:elevation="5dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/widget_vertical_margin"
+            android:layout_marginEnd="@dimen/widget_horizontal_margin"
+            android:layout_marginStart="@dimen/widget_horizontal_margin"
+            android:background="@drawable/track_selector"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/type_radio_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/radio_selector"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:paddingBottom="@dimen/widget_vertical_margin"
+                android:paddingTop="@dimen/widget_vertical_margin"
+                android:text="Type" />
+
+            <RadioButton
+                android:id="@+id/time_radio_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/radio_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingBottom="@dimen/widget_vertical_margin"
+                android:paddingTop="@dimen/widget_vertical_margin"
+                android:text="Time" />
+
+        </RadioGroup>
+
+    </LinearLayout>
 
 </RelativeLayout>

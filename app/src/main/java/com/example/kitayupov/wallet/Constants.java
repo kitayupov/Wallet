@@ -23,12 +23,10 @@ public class Constants {
     }
 
     public static void addTypeAmount(Map<String, Float> map, String type, Float amount) {
-        if (!"".equals(type)) {
-            if (map.containsKey(type)) {
-                map.put(type, map.get(type) + amount);
-            } else {
-                map.put(type, amount);
-            }
+        if (map.containsKey(type)) {
+            map.put(type, map.get(type) + amount);
+        } else {
+            map.put(type, amount);
         }
     }
 
