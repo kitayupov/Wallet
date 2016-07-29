@@ -3,7 +3,10 @@
     <color name="colorPrimary">#795548</color>
     <color name="colorPrimaryDark">#5D4037</color>
     <color name="colorAccent">#FF5722</color>
+    <color name="colorAccentLight">#FF9E80</color>
     <color name="colorProfit">#080</color>
     <color name="colorSpend">#d00</color>
     <color name="colorBackground">#D7CCC8</color>
+    <color name="colorTextLight">#FFFFFF</color>
+    <color name="colorTextDark">#000000</color>
 </resources>

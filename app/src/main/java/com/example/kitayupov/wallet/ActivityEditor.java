@@ -76,9 +76,16 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
         typeEditText.setText(transaction.getType());
         descEditText.setText(transaction.getDescription());
         setDate(transaction.getDate());
-        profitRadio.setChecked(transaction.isProfit());
-        spendRadio.setChecked(!transaction.isProfit());
-        amountEditText.setTextColor(transaction.isProfit() ? colorProfit : colorSpend);
+        boolean isProfit = transaction.isProfit();
+        profitRadio.setChecked(isProfit);
+        spendRadio.setChecked(!isProfit);
+        amountEditText.setTextColor(isProfit ? colorProfit : colorSpend);
+
+        if (isProfit) {
+            profitRadio.setTextColor(getResources().getColor(R.color.colorTextLight));
+        } else {
+            spendRadio.setTextColor(getResources().getColor(R.color.colorTextLight));
+        }
 
         setButtonListeners();
 
@@ -197,6 +204,8 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
         setTypeAutoCompleteArray(profitRadio.isChecked());
+        profitRadio.setTextColor(getResources().getColor(profitRadio.isChecked() ? R.color.colorTextLight : R.color.colorTextDark));
+        spendRadio.setTextColor(getResources().getColor(profitRadio.isChecked() ? R.color.colorTextDark : R.color.colorTextLight));
         amountEditText.setTextColor(profitRadio.isChecked() ? colorProfit : colorSpend);
     }
 

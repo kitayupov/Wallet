@@ -23,4 +23,10 @@
         <item name="background">@color/colorPrimary</item>
     </style>
 
+    <style name="AppTheme.CustomProgressBarHorizontal" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/custom_progressbar</item>
+        <item name="android:minHeight">30dip</item>
+        <item name="android:maxHeight">100dip</item>
+    </style>
+
 </resources>

@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.kitayupov.wallet.dto.TransDbHelper;
+import com.example.kitayupov.wallet.statistics.StatisticsAdapter;
+import com.example.kitayupov.wallet.statistics.StatisticsItem;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -74,25 +76,25 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_total:
-                startDate = 0;
-                break;
-            case R.id.menu_year:
-                calendar.set(Calendar.DAY_OF_YEAR, 1);
-                startDate = calendar.getTimeInMillis();
-                break;
-            case R.id.menu_month:
-                calendar.set(Calendar.DAY_OF_MONTH, 1);
-                startDate = calendar.getTimeInMillis();
-                break;
-            case R.id.menu_week:
-                calendar.set(Calendar.DAY_OF_MONTH, 1);
-                startDate = calendar.getTimeInMillis();
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+//        switch (item.getItemId()) {
+//            case R.id.menu_total:
+//                startDate = 0;
+//                break;
+//            case R.id.menu_year:
+//                calendar.set(Calendar.DAY_OF_YEAR, 1);
+//                startDate = calendar.getTimeInMillis();
+//                break;
+//            case R.id.menu_month:
+//                calendar.set(Calendar.DAY_OF_MONTH, 1);
+//                startDate = calendar.getTimeInMillis();
+//                break;
+//            case R.id.menu_week:
+//                calendar.set(Calendar.DAY_OF_MONTH, 1);
+//                startDate = calendar.getTimeInMillis();
+//                break;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
         readDatabase();
         return true;
     }
@@ -132,7 +134,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         switch (selectionTime) {
             case TOTAL:
                 Constants.addTypeAmount(map,
-                        new SimpleDateFormat("dd MMMM yyyy", Locale.ROOT).format(date), amount);
+                        new SimpleDateFormat("dd MMM yyyy").format(date), amount);
                 break;
             case YEAR:
                 Constants.addTypeAmount(map,
@@ -152,6 +154,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     private void setResult(float total) {
         ArrayList<String> records = new ArrayList<>();
+        ArrayList<StatisticsItem> stats = new ArrayList<>();
         Map<String, Float> sortedMap = sortByValue(map);
         for (String type : sortedMap.keySet()) {
             StringBuilder builder = new StringBuilder();
@@ -160,10 +163,12 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
                     .append(String.format(Locale.ROOT, "%10s", MainActivity.stringFormat(sortedMap.get(type))))
                     .append("\t")
                     .append(String.format(Locale.ROOT, "%10.2f%%", sortedMap.get(type) / total * 100));
-
             records.add(builder.toString());
+            stats.add(new StatisticsItem(type, sortedMap.get(type), sortedMap.get(type) / total * 100));
         }
-        ((ListView) findViewById(R.id.list_view)).setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, records));
+        StatisticsAdapter adapter = new StatisticsAdapter(this, stats);
+        ((ListView) findViewById(R.id.list_view)).setAdapter(adapter);
+//        ((ListView) findViewById(R.id.list_view)).setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, records));
     }
 
     private static <K, V> Map<K, V> sortByValue(Map<K, V> map) {

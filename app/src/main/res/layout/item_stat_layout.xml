@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingBottom="10dp"
+    android:padding="5dp">
+
+    <ProgressBar
+        style="@style/AppTheme.CustomProgressBarHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/progressBar"
+        android:layout_centerVertical="true"
+        android:max="100"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="New Text"
+            android:id="@+id/type_text"
+            android:layout_weight="1"
+            android:gravity="center_vertical|start"
+            android:padding="5dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="New Text"
+            android:id="@+id/amount_text"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="New Text"
+            android:id="@+id/percent_text"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
+            android:padding="5dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</RelativeLayout>

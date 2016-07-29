@@ -35,7 +35,8 @@
                 android:checked="true"
                 android:paddingBottom="@dimen/widget_vertical_margin"
                 android:paddingTop="@dimen/widget_vertical_margin"
-                android:text="@string/profit" />
+                android:text="@string/profit"
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/spend_radio_button"
@@ -48,7 +49,8 @@
                 android:checked="false"
                 android:paddingBottom="@dimen/widget_vertical_margin"
                 android:paddingTop="@dimen/widget_vertical_margin"
-                android:text="@string/spending" />
+                android:text="@string/spending"
+                android:textStyle="bold" />
         </RadioGroup>
 
         <LinearLayout
