@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,11 +31,10 @@ import java.util.Map;
 public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Map<String, Float> map;
-    private TextView statistics;
     private boolean isProfit;
     private Calendar calendar;
     private long startDate = 0;
-    private static final long dateToday = System.currentTimeMillis();
+    private long dateToday;
 
     private SelectionTime selectionTime = SelectionTime.TOTAL;
     private SelectionType selectionType = SelectionType.BY_TYPE;
@@ -57,6 +55,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     private void initialize() {
         isProfit = getIntent().getBooleanExtra(MainActivity.IS_PROFIT, true);
         calendar = Calendar.getInstance();
+        dateToday = System.currentTimeMillis();
     }
 
     private void setRadioButtonsListeners() {
@@ -66,37 +65,6 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
         findViewById(R.id.type_radio_button).setOnClickListener(this);
         findViewById(R.id.time_radio_button).setOnClickListener(this);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_statistics, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.menu_total:
-//                startDate = 0;
-//                break;
-//            case R.id.menu_year:
-//                calendar.set(Calendar.DAY_OF_YEAR, 1);
-//                startDate = calendar.getTimeInMillis();
-//                break;
-//            case R.id.menu_month:
-//                calendar.set(Calendar.DAY_OF_MONTH, 1);
-//                startDate = calendar.getTimeInMillis();
-//                break;
-//            case R.id.menu_week:
-//                calendar.set(Calendar.DAY_OF_MONTH, 1);
-//                startDate = calendar.getTimeInMillis();
-//                break;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-        readDatabase();
-        return true;
     }
 
     private void readDatabase() {

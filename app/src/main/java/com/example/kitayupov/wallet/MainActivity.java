@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void readDatabase() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(TransDbHelper.TABLE_NAME, null, null, null, null, null, null);
+        Cursor cursor = db.query(TransDbHelper.TABLE_NAME, null, null, null, null, null, DATE);
         if (cursor.moveToFirst()) {
             int amountIndex = cursor.getColumnIndex(AMOUNT);
             int typeIndex = cursor.getColumnIndex(TYPE);
@@ -135,10 +135,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 Transaction item = new Transaction(amount, type, desc, date, isProfit);
                 mArrayList.add(item);
-                Log.d(LOG_TAG, "readed " + item.toString());
+                Log.d(LOG_TAG, "read " + item.toString());
             } while (cursor.moveToNext());
             cursor.close();
-            Log.d(LOG_TAG, "total readed " + mArrayList.size());
+            Log.d(LOG_TAG, "total read " + mArrayList.size());
             setTotal();
         }
     }
