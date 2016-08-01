@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.example.kitayupov.wallet.dto.TransDbHelper;
+import com.example.kitayupov.wallet.fragments.DatePeriodDialogFragment;
+import com.example.kitayupov.wallet.fragments.OnDateChangeListener;
 import com.example.kitayupov.wallet.statistics.StatisticsAdapter;
 import com.example.kitayupov.wallet.statistics.StatisticsItem;
 
@@ -25,21 +27,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener {
+public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener, OnDateChangeListener {
 
     private Map<String, Float> map;
     private boolean isProfit;
-    private Calendar calendar;
+
     private long startDate;
     private long finishDate;
 
     private SelectionTime selectionTime;
     private SelectionType selectionType;
+    public static final String START_DATE = "Statistics.StartDate";
+    public static final String FINISH_DATE = "Statistics.FinishDate";
 
     private enum SelectionTime {TOTAL, YEAR, MONTH, CUSTOM}
 
-    private enum SelectionType {BY_TYPE, BY_TIME}
 
+    private enum SelectionType {BY_TYPE, BY_TIME;}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +55,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     private void initialize() {
         isProfit = getIntent().getBooleanExtra(MainActivity.IS_PROFIT, true);
-        calendar = Calendar.getInstance();
+
         startDate = 0;
         finishDate = System.currentTimeMillis();
         selectionTime = SelectionTime.TOTAL;
@@ -62,6 +66,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         findViewById(R.id.total_radio_button).setOnClickListener(this);
         findViewById(R.id.year_radio_button).setOnClickListener(this);
         findViewById(R.id.month_radio_button).setOnClickListener(this);
+        findViewById(R.id.custom_radio_button).setOnClickListener(this);
 
         findViewById(R.id.type_radio_button).setOnClickListener(this);
         findViewById(R.id.time_radio_button).setOnClickListener(this);
@@ -101,6 +106,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         calendar.setTimeInMillis(date);
         switch (selectionTime) {
             case TOTAL:
+            case CUSTOM:
                 Constants.addTypeAmount(map,
                         new SimpleDateFormat("dd MMM yyyy").format(date), amount);
                 break;
@@ -147,7 +153,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View view) {
-        calendar.setTimeInMillis(finishDate);
+        Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.clear(Calendar.MINUTE);
         calendar.clear(Calendar.SECOND);
@@ -172,9 +178,12 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.custom_radio_button:
                 selectionTime = SelectionTime.CUSTOM;
-                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
-                startDate = calendar.getTimeInMillis();
-                finishDate = System.currentTimeMillis();
+                DatePeriodDialogFragment dialogFragment = new DatePeriodDialogFragment();
+                Bundle bundle = new Bundle();
+                bundle.putLong(START_DATE, startDate > 0 ? startDate : finishDate);
+                bundle.putLong(FINISH_DATE, finishDate);
+                dialogFragment.setArguments(bundle);
+                dialogFragment.show(getFragmentManager(), "Dates");
                 break;
             case R.id.time_radio_button:
                 selectionType = SelectionType.BY_TIME;
@@ -182,6 +191,18 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             case R.id.type_radio_button:
                 selectionType = SelectionType.BY_TYPE;
                 break;
+        }
+        readDatabase();
+    }
+
+    @Override
+    public void onComplete(Calendar cal1, Calendar cal2) {
+        startDate = cal1.getTimeInMillis();
+        finishDate = cal2.getTimeInMillis();
+        if (startDate > finishDate) {
+            long tmp = startDate;
+            startDate = finishDate;
+            finishDate = tmp;
         }
         readDatabase();
     }

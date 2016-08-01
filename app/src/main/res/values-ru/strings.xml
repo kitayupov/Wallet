@@ -19,4 +19,8 @@
     <string name="button_type">Тип</string>
     <string name="button_year">Год</string>
     <string name="button_custom">Выбрать</string>
+    <string name="hint_date_finish">Дата окончания</string>
+    <string name="hint_date_start">Дата начала</string>
+    <string name="save">Сохранить</string>
+    <string name="select_dates">Выберите даты</string>
 </resources>

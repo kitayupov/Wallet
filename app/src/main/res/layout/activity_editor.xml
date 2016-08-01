@@ -170,8 +170,7 @@
                     android:layout_height="wrap_content"
                     android:focusable="false"
                     android:gravity="center"
-                    android:hint="@string/hint_date"
-                    android:inputType="textCapSentences" />
+                    android:hint="@string/hint_date" />
 
             </android.support.design.widget.TextInputLayout>
 
