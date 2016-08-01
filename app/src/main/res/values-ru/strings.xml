@@ -13,4 +13,9 @@
     <string name="label_select_category">Выберите категорию</string>
     <string name="hint_date">Дата</string>
     <string name="label_select_description">Выберите описание</string>
+    <string name="button_month">Месяц</string>
+    <string name="button_time">Время</string>
+    <string name="button_total">Всего</string>
+    <string name="button_type">Тип</string>
+    <string name="button_year">Год</string>
 </resources>

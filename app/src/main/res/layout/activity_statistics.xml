@@ -35,7 +35,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/widget_vertical_margin"
                 android:paddingTop="@dimen/widget_vertical_margin"
-                android:text="Total" />
+                android:text="@string/button_total" />
 
             <RadioButton
                 android:id="@+id/year_radio_button"
@@ -47,7 +47,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/widget_vertical_margin"
                 android:paddingTop="@dimen/widget_vertical_margin"
-                android:text="Year" />
+                android:text="@string/button_year" />
 
             <RadioButton
                 android:id="@+id/month_radio_button"
@@ -59,7 +59,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/widget_vertical_margin"
                 android:paddingTop="@dimen/widget_vertical_margin"
-                android:text="Month" />
+                android:text="@string/button_month" />
 
         </RadioGroup>
 
@@ -107,7 +107,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/widget_vertical_margin"
                 android:paddingTop="@dimen/widget_vertical_margin"
-                android:text="Type" />
+                android:text="@string/button_type" />
 
             <RadioButton
                 android:id="@+id/time_radio_button"
@@ -119,7 +119,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/widget_vertical_margin"
                 android:paddingTop="@dimen/widget_vertical_margin"
-                android:text="Time" />
+                android:text="@string/button_time" />
 
         </RadioGroup>
 

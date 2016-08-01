@@ -36,7 +36,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     private SelectionTime selectionTime;
     private SelectionType selectionType;
 
-    private enum SelectionTime {TOTAL, YEAR, MONTH, WEEK}
+    private enum SelectionTime {TOTAL, YEAR, MONTH}
 
     private enum SelectionType {BY_TYPE, BY_TIME}
 
@@ -91,8 +91,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
                 total += amount;
             } while (cursor.moveToNext());
             cursor.close();
-            setResult(total);
         }
+        setResult(total);
     }
 
     private void addTimeAmount(long date, float amount) {
@@ -104,17 +104,14 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
                         new SimpleDateFormat("dd MMM yyyy").format(date), amount);
                 break;
             case YEAR:
-                Constants.addTypeAmount(map,
+                Constants.addTypeAmount(map, "01 - " +
+                        calendar.getActualMaximum(Calendar.DAY_OF_MONTH) + " " +
                         new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)], amount);
                 break;
             case MONTH:
                 Constants.addTypeAmount(map,
                         String.format(Locale.ROOT, "%02d %s", calendar.get(Calendar.DAY_OF_MONTH),
                                 new DateFormatSymbols().getMonths()[calendar.get(Calendar.MONTH)]), amount);
-                break;
-            case WEEK:
-                Constants.addTypeAmount(map,
-                        new DateFormatSymbols().getWeekdays()[calendar.get(Calendar.DAY_OF_WEEK)], amount);
                 break;
         }
     }
@@ -161,12 +158,12 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.year_radio_button:
                 selectionTime = SelectionTime.YEAR;
-                calendar.set(calendar.get(Calendar.YEAR), 0, 0);
+                calendar.set(calendar.get(Calendar.YEAR), 0, 1);
                 startDate = calendar.getTimeInMillis();
                 break;
             case R.id.month_radio_button:
                 selectionTime = SelectionTime.MONTH;
-                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 0);
+                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
                 startDate = calendar.getTimeInMillis();
                 break;
             case R.id.time_radio_button:
