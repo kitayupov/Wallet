@@ -43,8 +43,16 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
         startCalendar = Calendar.getInstance();
         finishCalendar = Calendar.getInstance();
 
-        startCalendar.setTimeInMillis(getArguments().getLong(StatisticsActivity.START_DATE));
-        finishCalendar.setTimeInMillis(getArguments().getLong(StatisticsActivity.FINISH_DATE));
+        long startDate = getArguments().getLong(StatisticsActivity.START_DATE);
+        long finishDate = getArguments().getLong(StatisticsActivity.FINISH_DATE);
+
+        if (startDate == 0) {
+            startCalendar.setTimeInMillis(finishDate);
+            startCalendar.set(Calendar.MONTH, startCalendar.get(Calendar.MONTH) - 1);
+        } else {
+            startCalendar.setTimeInMillis(getArguments().getLong(StatisticsActivity.START_DATE));
+        }
+        finishCalendar.setTimeInMillis(finishDate);
 
         setDate();
 

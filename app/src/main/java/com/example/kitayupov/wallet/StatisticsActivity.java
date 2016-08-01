@@ -180,7 +180,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
                 selectionTime = SelectionTime.CUSTOM;
                 DatePeriodDialogFragment dialogFragment = new DatePeriodDialogFragment();
                 Bundle bundle = new Bundle();
-                bundle.putLong(START_DATE, startDate > 0 ? startDate : finishDate);
+                bundle.putLong(START_DATE, startDate);
                 bundle.putLong(FINISH_DATE, finishDate);
                 dialogFragment.setArguments(bundle);
                 dialogFragment.show(getFragmentManager(), "Dates");
