@@ -12,6 +12,8 @@ import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
@@ -51,13 +53,22 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
-        calendar = Calendar.getInstance();
-        colorProfit = getResources().getColor(R.color.colorProfit);
-        colorSpend = getResources().getColor(R.color.colorSpend);
+        setNotificationBarColor();
         initialize();
     }
 
+    private void setNotificationBarColor() {
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+    }
+
     private void initialize() {
+        calendar = Calendar.getInstance();
+        colorProfit = getResources().getColor(R.color.colorProfit);
+        colorSpend = getResources().getColor(R.color.colorSpend);
+
         amountEditText = (EditText) findViewById(R.id.amount_edit_text);
         typeEditText = (AutoCompleteTextView) findViewById(R.id.type_edit_text);
         descEditText = (AutoCompleteTextView) findViewById(R.id.desc_edit_text);
