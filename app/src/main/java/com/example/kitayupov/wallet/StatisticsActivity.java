@@ -4,11 +4,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.kitayupov.wallet.dto.TransDbHelper;
 import com.example.kitayupov.wallet.statistics.StatisticsAdapter;
@@ -36,8 +33,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     private long startDate = 0;
     private long dateToday;
 
-    private SelectionTime selectionTime = SelectionTime.TOTAL;
-    private SelectionType selectionType = SelectionType.BY_TYPE;
+    private SelectionTime selectionTime;
+    private SelectionType selectionType;
 
     private enum SelectionTime {TOTAL, YEAR, MONTH, WEEK}
 
@@ -56,6 +53,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         isProfit = getIntent().getBooleanExtra(MainActivity.IS_PROFIT, true);
         calendar = Calendar.getInstance();
         dateToday = System.currentTimeMillis();
+        selectionTime = SelectionTime.TOTAL;
+        selectionType = SelectionType.BY_TYPE;
     }
 
     private void setRadioButtonsListeners() {
@@ -121,22 +120,13 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setResult(float total) {
-        ArrayList<String> records = new ArrayList<>();
         ArrayList<StatisticsItem> stats = new ArrayList<>();
         Map<String, Float> sortedMap = sortByValue(map);
         for (String type : sortedMap.keySet()) {
-            StringBuilder builder = new StringBuilder();
-            builder.append(String.format(Locale.ROOT, "%10s", type))
-                    .append("\t")
-                    .append(String.format(Locale.ROOT, "%10s", MainActivity.stringFormat(sortedMap.get(type))))
-                    .append("\t")
-                    .append(String.format(Locale.ROOT, "%10.2f%%", sortedMap.get(type) / total * 100));
-            records.add(builder.toString());
             stats.add(new StatisticsItem(type, sortedMap.get(type), sortedMap.get(type) / total * 100));
         }
         StatisticsAdapter adapter = new StatisticsAdapter(this, stats);
         ((ListView) findViewById(R.id.list_view)).setAdapter(adapter);
-//        ((ListView) findViewById(R.id.list_view)).setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, records));
     }
 
     private static <K, V> Map<K, V> sortByValue(Map<K, V> map) {
