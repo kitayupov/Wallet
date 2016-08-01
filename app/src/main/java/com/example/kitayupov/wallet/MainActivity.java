@@ -25,6 +25,8 @@ import com.example.kitayupov.wallet.dto.TransDbHelper;
 import com.example.kitayupov.wallet.dto.Transaction;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -263,8 +265,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             totalProfit += item.isProfit() ? item.getAmount() : 0;
             totalSpend += item.isProfit() ? 0 : item.getAmount();
             mArrayList.add(position, item);
+            Collections.sort(mArrayList, new DateComparator());
             mAdapter.notifyDataSetChanged();
             setTotal();
+        }
+    }
+
+    private class DateComparator implements Comparator<Transaction> {
+        @Override
+        public int compare(Transaction t1, Transaction t2) {
+            return (int) (t1.getDate() - t2.getDate());
         }
     }
 

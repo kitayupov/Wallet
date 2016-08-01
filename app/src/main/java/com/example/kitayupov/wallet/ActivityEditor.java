@@ -2,6 +2,7 @@ package com.example.kitayupov.wallet;
 
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TimePicker;
 
 import com.example.kitayupov.wallet.dto.Transaction;
 import com.example.kitayupov.wallet.fragments.CategoryListFragment;
@@ -148,17 +150,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
 
     private void setDate(long date) {
         calendar.setTimeInMillis(date);
-        dateEditText.setText(DateFormat.format("dd MMM yyyy", calendar.getTimeInMillis()));
-    }
-
-    private long getDate(DatePicker datePicker) {
-        int day = datePicker.getDayOfMonth();
-        int month = datePicker.getMonth();
-        int year = datePicker.getYear();
-
-        calendar.set(year, month, day);
-
-        return calendar.getTime().getTime();
+        dateEditText.setText(DateFormat.format("dd MMMM yyyy HH:mm", calendar.getTimeInMillis()));
     }
 
     private void sendResult(Transaction transaction) {
@@ -231,13 +223,24 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
                 break;
             case R.id.set_date_button:
             case R.id.date_edit_text:
-                new DatePickerDialog(ActivityEditor.this, d,
-                        calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH))
-                        .show();
+                setDate();
                 break;
         }
+    }
+
+    private void setDate() {
+        new DatePickerDialog(ActivityEditor.this, d,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH))
+                .show();
+    }
+
+    private void setTime() {
+        new TimePickerDialog(ActivityEditor.this, t,
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE), true)
+                .show();
     }
 
     // Обрабатывает выбор даты
@@ -246,6 +249,15 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, monthOfYear);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            setTime();
+        }
+    };
+
+    // Обрабатывает выбор времени
+    private TimePickerDialog.OnTimeSetListener t = new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
             setDate(calendar.getTimeInMillis());
         }
     };
