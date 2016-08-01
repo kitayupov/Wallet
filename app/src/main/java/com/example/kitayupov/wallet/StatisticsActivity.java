@@ -30,13 +30,13 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     private Map<String, Float> map;
     private boolean isProfit;
     private Calendar calendar;
-    private long startDate = 0;
-    private long dateToday;
+    private long startDate;
+    private long finishDate;
 
     private SelectionTime selectionTime;
     private SelectionType selectionType;
 
-    private enum SelectionTime {TOTAL, YEAR, MONTH}
+    private enum SelectionTime {TOTAL, YEAR, MONTH, CUSTOM}
 
     private enum SelectionType {BY_TYPE, BY_TIME}
 
@@ -52,7 +52,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     private void initialize() {
         isProfit = getIntent().getBooleanExtra(MainActivity.IS_PROFIT, true);
         calendar = Calendar.getInstance();
-        dateToday = System.currentTimeMillis();
+        startDate = 0;
+        finishDate = System.currentTimeMillis();
         selectionTime = SelectionTime.TOTAL;
         selectionType = SelectionType.BY_TYPE;
     }
@@ -73,7 +74,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] columns = {MainActivity.AMOUNT, MainActivity.TYPE, MainActivity.DATE};
         String selection = MainActivity.IS_PROFIT + " = ? AND " + MainActivity.DATE + " >= ? AND " + MainActivity.DATE + " <= ?";
-        String[] selectionArgs = {String.valueOf(isProfit ? 1 : 0), String.valueOf(startDate), String.valueOf(dateToday)};
+        String[] selectionArgs = {String.valueOf(isProfit ? 1 : 0), String.valueOf(startDate), String.valueOf(finishDate)};
         Cursor cursor = db.query(TransDbHelper.TABLE_NAME, columns, selection, selectionArgs, null, null, null);
         if (cursor.moveToFirst()) {
             int amountIndex = cursor.getColumnIndex(MainActivity.AMOUNT);
@@ -146,7 +147,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View view) {
-        calendar.setTimeInMillis(dateToday);
+        calendar.setTimeInMillis(finishDate);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.clear(Calendar.MINUTE);
         calendar.clear(Calendar.SECOND);
@@ -155,16 +156,25 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
             case R.id.total_radio_button:
                 selectionTime = SelectionTime.TOTAL;
                 startDate = 0;
+                finishDate = System.currentTimeMillis();
                 break;
             case R.id.year_radio_button:
                 selectionTime = SelectionTime.YEAR;
                 calendar.set(calendar.get(Calendar.YEAR), 0, 1);
                 startDate = calendar.getTimeInMillis();
+                finishDate = System.currentTimeMillis();
                 break;
             case R.id.month_radio_button:
                 selectionTime = SelectionTime.MONTH;
                 calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
                 startDate = calendar.getTimeInMillis();
+                finishDate = System.currentTimeMillis();
+                break;
+            case R.id.custom_radio_button:
+                selectionTime = SelectionTime.CUSTOM;
+                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
+                startDate = calendar.getTimeInMillis();
+                finishDate = System.currentTimeMillis();
                 break;
             case R.id.time_radio_button:
                 selectionType = SelectionType.BY_TIME;

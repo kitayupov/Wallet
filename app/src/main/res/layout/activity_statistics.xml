@@ -61,6 +61,18 @@
                 android:paddingTop="@dimen/widget_vertical_margin"
                 android:text="@string/button_month" />
 
+            <RadioButton
+                android:id="@+id/custom_radio_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/radio_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingBottom="@dimen/widget_vertical_margin"
+                android:paddingTop="@dimen/widget_vertical_margin"
+                android:text="@string/button_custom" />
+
         </RadioGroup>
 
     </LinearLayout>

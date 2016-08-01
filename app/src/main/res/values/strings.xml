@@ -18,4 +18,5 @@
     <string name="button_total">Total</string>
     <string name="button_year">Year</string>
     <string name="button_month">Month</string>
+    <string name="button_custom">Custom</string>
 </resources>

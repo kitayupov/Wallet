@@ -18,4 +18,5 @@
     <string name="button_total">Всего</string>
     <string name="button_type">Тип</string>
     <string name="button_year">Год</string>
+    <string name="button_custom">Выбрать</string>
 </resources>
