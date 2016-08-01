@@ -265,16 +265,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             totalProfit += item.isProfit() ? item.getAmount() : 0;
             totalSpend += item.isProfit() ? 0 : item.getAmount();
             mArrayList.add(position, item);
-            Collections.sort(mArrayList, new DateComparator());
+            Collections.sort(mArrayList, new Comparator<Transaction>() {
+                @Override
+                public int compare(Transaction t1, Transaction t2) {
+                    return (int) (t1.getDate() - t2.getDate());
+                }
+            });
             mAdapter.notifyDataSetChanged();
             setTotal();
-        }
-    }
-
-    private class DateComparator implements Comparator<Transaction> {
-        @Override
-        public int compare(Transaction t1, Transaction t2) {
-            return (int) (t1.getDate() - t2.getDate());
         }
     }
 
