@@ -8,21 +8,21 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.CalendarView;
 import android.widget.DatePicker;
-import android.widget.EditText;
 
 import com.example.kitayupov.wallet.R;
 import com.example.kitayupov.wallet.StatisticsActivity;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DatePeriodDialogFragment extends DialogFragment implements View.OnClickListener {
 
-    private EditText startDateText;
-    private EditText finishDateText;
     private Calendar startCalendar;
     private Calendar finishCalendar;
+
+    private DatePicker startDatePicker;
+    private DatePicker finishDatePicker;
 
     private OnDateChangeListener dateChangeListener;
 
@@ -32,13 +32,25 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_select_period, null);
         builder.setView(view);
-        builder.setTitle(R.string.select_dates);
 
-        startDateText = (EditText) view.findViewById(R.id.start_edit_text);
-        finishDateText = (EditText) view.findViewById(R.id.finish_edit_text);
+        view.findViewById(R.id.start_date_button).setOnClickListener(this);
+        view.findViewById(R.id.finish_date_button).setOnClickListener(this);
 
-        startDateText.setOnClickListener(this);
-        finishDateText.setOnClickListener(this);
+        startDatePicker = (DatePicker) view.findViewById(R.id.start_date_picker);
+        finishDatePicker = (DatePicker) view.findViewById(R.id.finish_date_picker);
+
+        startDatePicker.getCalendarView().setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView calendarView, int i, int i1, int i2) {
+                startCalendar.set(i, i1, i2);
+            }
+        });
+        finishDatePicker.getCalendarView().setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView calendarView, int i, int i1, int i2) {
+                finishCalendar.set(i, i1, i2);
+            }
+        });
 
         startCalendar = Calendar.getInstance();
         finishCalendar = Calendar.getInstance();
@@ -54,7 +66,7 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
         }
         finishCalendar.setTimeInMillis(finishDate);
 
-        setDate();
+        setDates();
 
         // Добавляет кнопку сохранения изображения
         builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
@@ -70,15 +82,15 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.start_edit_text:
-                new DatePickerDialog(getActivity(), d1,
+            case R.id.start_date_button:
+                new DatePickerDialog(getActivity(), startDateListener,
                         startCalendar.get(Calendar.YEAR),
                         startCalendar.get(Calendar.MONTH),
                         startCalendar.get(Calendar.DAY_OF_MONTH))
                         .show();
                 break;
-            case R.id.finish_edit_text:
-                new DatePickerDialog(getActivity(), d2,
+            case R.id.finish_date_button:
+                new DatePickerDialog(getActivity(), finishDateListener,
                         finishCalendar.get(Calendar.YEAR),
                         finishCalendar.get(Calendar.MONTH),
                         finishCalendar.get(Calendar.DAY_OF_MONTH))
@@ -87,30 +99,33 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
         }
     }
 
-
     // Обрабатывает выбор даты
-    private DatePickerDialog.OnDateSetListener d1 = new DatePickerDialog.OnDateSetListener() {
+    private DatePickerDialog.OnDateSetListener startDateListener = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             startCalendar.set(Calendar.YEAR, year);
             startCalendar.set(Calendar.MONTH, monthOfYear);
             startCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            setDate();
+            setDates();
         }
     };
 
     // Обрабатывает выбор даты
-    private DatePickerDialog.OnDateSetListener d2 = new DatePickerDialog.OnDateSetListener() {
+    private DatePickerDialog.OnDateSetListener finishDateListener = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             finishCalendar.set(Calendar.YEAR, year);
             finishCalendar.set(Calendar.MONTH, monthOfYear);
             finishCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            setDate();
+            setDates();
         }
     };
 
-    private void setDate() {
-        startDateText.setText(new SimpleDateFormat("dd MMMM yyyy").format(startCalendar.getTimeInMillis()));
-        finishDateText.setText(new SimpleDateFormat("dd MMMM yyyy").format(finishCalendar.getTimeInMillis()));
+    private void setDates() {
+        startDatePicker.updateDate(startCalendar.get(Calendar.YEAR),
+                startCalendar.get(Calendar.MONTH),
+                startCalendar.get(Calendar.DAY_OF_MONTH));
+        finishDatePicker.updateDate(finishCalendar.get(Calendar.YEAR),
+                finishCalendar.get(Calendar.MONTH),
+                finishCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
 
