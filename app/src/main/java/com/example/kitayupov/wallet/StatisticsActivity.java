@@ -44,8 +44,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     private enum SelectionTime {TOTAL, YEAR, MONTH, CUSTOM}
 
-
     private enum SelectionType {BY_TYPE, BY_TIME;}
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +56,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         setRadioButtonsListeners();
     }
 
+    // Sets notification bar color
     private void setNotificationBarColor() {
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -63,20 +64,24 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
     }
 
+    // Initializes dates
     private void initialize() {
         isProfit = getIntent().getBooleanExtra(MainActivity.IS_PROFIT, true);
 
         startDate = 0;
+
         Calendar current = Calendar.getInstance();
         current.set(Calendar.HOUR_OF_DAY, 23);
         current.set(Calendar.MINUTE, 59);
         current.set(Calendar.SECOND, 59);
         current.set(Calendar.MILLISECOND, 999);
         finishDate = current.getTimeInMillis();
+
         selectionTime = SelectionTime.TOTAL;
         selectionType = SelectionType.BY_TYPE;
     }
 
+    // Sets radio button listeners
     private void setRadioButtonsListeners() {
         findViewById(R.id.total_radio_button).setOnClickListener(this);
         findViewById(R.id.year_radio_button).setOnClickListener(this);
@@ -87,6 +92,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         findViewById(R.id.time_radio_button).setOnClickListener(this);
     }
 
+    // Reads transaction database
     private void readDatabase() {
         float total = 0f;
         map = new HashMap<>();
@@ -116,6 +122,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         setResult(total);
     }
 
+    // Configures type map by dates
     private void addTimeAmount(long date, float amount) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(date);
@@ -138,6 +145,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    // Outputs result
     private void setResult(float total) {
         ArrayList<StatisticsItem> stats = new ArrayList<>();
         Map<String, Float> sortedMap = sortByValue(map);
@@ -148,6 +156,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         ((ListView) findViewById(R.id.list_view)).setAdapter(adapter);
     }
 
+    // Sorts type map by amount sum value
     private static <K, V> Map<K, V> sortByValue(Map<K, V> map) {
         List<Map.Entry<K, V>> list = new LinkedList<>(map.entrySet());
         Collections.sort(list, new Comparator<Object>() {
@@ -210,6 +219,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         readDatabase();
     }
 
+    // Receives start and finish dates from date period dialog fragment
     @Override
     public void onChange(Calendar cal1, Calendar cal2) {
         startDate = cal1.getTimeInMillis();
