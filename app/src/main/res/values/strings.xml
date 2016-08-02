@@ -24,4 +24,5 @@
     <string name="select_dates">Select dates</string>
     <string name="save">Save</string>
     <string name="clean">Clean</string>
+    <string name="calculator">Calculator</string>
 </resources>

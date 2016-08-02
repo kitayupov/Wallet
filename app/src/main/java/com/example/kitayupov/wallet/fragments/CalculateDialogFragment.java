@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -30,14 +31,14 @@ public class CalculateDialogFragment extends DialogFragment implements View.OnCl
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setView(getContentView());
-        builder.setTitle("Калькулятор");
+        builder.setTitle(R.string.calculator);
 
         builder.setPositiveButton(R.string.save, null);
         builder.setNeutralButton(R.string.clean, null);
 
         final AlertDialog dialog = builder.create();
 
-        // Переопределяет обработчик нажатия кнопок управления
+        // Overrides button listeners
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface di) {
@@ -60,23 +61,27 @@ public class CalculateDialogFragment extends DialogFragment implements View.OnCl
         return dialog;
     }
 
+    // Clears result
     private void OnClearButtonClicked() {
         textView.setText(null);
         editText.setText(null);
         result = 0;
     }
 
+    // Saves result
     private void onSaveButtonClicked() {
         listener.onCalculateComplete(result);
         dismiss();
     }
 
+    // Returns inflated view
     @NonNull
     private View getContentView() {
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_calculate, null);
 
-        editText = (EditText) view.findViewById(R.id.edit);
         textView = (TextView) view.findViewById(R.id.text);
+        editText = (EditText) view.findViewById(R.id.edit);
+        editText.requestFocus();
 
         if (getArguments() != null && getArguments().containsKey(MainActivity.AMOUNT)) {
             editText.setText(String.valueOf(getArguments().getFloat(MainActivity.AMOUNT)));
@@ -129,6 +134,7 @@ public class CalculateDialogFragment extends DialogFragment implements View.OnCl
         editText.setText(null);
     }
 
+    // Takes arithmetic operations
     private void takeResult(float v, MathAction a) {
         if (result == 0) {
             result = v;
@@ -154,13 +160,21 @@ public class CalculateDialogFragment extends DialogFragment implements View.OnCl
         action = a;
     }
 
+    // Passes data to activity
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
             listener = (OnCalculateListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnCategoryListener");
+            throw new ClassCastException(activity.toString() + " must implement OnCalculateListener");
         }
+    }
+
+    // Sets soft keyboard automatically visible
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 }
