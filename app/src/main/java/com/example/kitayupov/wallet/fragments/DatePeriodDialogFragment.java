@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
@@ -14,6 +15,7 @@ import android.widget.DatePicker;
 import com.example.kitayupov.wallet.R;
 import com.example.kitayupov.wallet.StatisticsActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DatePeriodDialogFragment extends DialogFragment implements View.OnClickListener {
@@ -64,7 +66,17 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
         } else {
             startCalendar.setTimeInMillis(getArguments().getLong(StatisticsActivity.START_DATE));
         }
+
+        startCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        startCalendar.clear(Calendar.MINUTE);
+        startCalendar.clear(Calendar.SECOND);
+        startCalendar.clear(Calendar.MILLISECOND);
+
         finishCalendar.setTimeInMillis(finishDate);
+        finishCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        finishCalendar.set(Calendar.MINUTE, 59);
+        finishCalendar.set(Calendar.SECOND, 59);
+        finishCalendar.set(Calendar.MILLISECOND, 999);
 
         setDates();
 
@@ -127,7 +139,6 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
                 finishCalendar.get(Calendar.MONTH),
                 finishCalendar.get(Calendar.DAY_OF_MONTH));
     }
-
 
     @Override
     public void onAttach(Activity activity) {

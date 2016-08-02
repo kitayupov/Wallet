@@ -67,7 +67,12 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         isProfit = getIntent().getBooleanExtra(MainActivity.IS_PROFIT, true);
 
         startDate = 0;
-        finishDate = System.currentTimeMillis();
+        Calendar current = Calendar.getInstance();
+        current.set(Calendar.HOUR_OF_DAY, 23);
+        current.set(Calendar.MINUTE, 59);
+        current.set(Calendar.SECOND, 59);
+        current.set(Calendar.MILLISECOND, 999);
+        finishDate = current.getTimeInMillis();
         selectionTime = SelectionTime.TOTAL;
         selectionType = SelectionType.BY_TYPE;
     }
