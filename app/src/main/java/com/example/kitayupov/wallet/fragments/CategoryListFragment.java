@@ -22,7 +22,7 @@ import java.util.Map;
 public class CategoryListFragment extends DialogFragment {
 
     private ListView listView;
-    private OnCompleteListener completeListener;
+    private OnCategoryListener completeListener;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class CategoryListFragment extends DialogFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                completeListener.onComplete(types.get(i));
+                completeListener.onCategorySelect(types.get(i));
                 dismiss();
             }
         });
@@ -66,9 +66,9 @@ public class CategoryListFragment extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            completeListener = (OnCompleteListener) activity;
+            completeListener = (OnCategoryListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnCompleteListener");
+            throw new ClassCastException(activity.toString() + " must implement OnCategoryListener");
         }
     }
 }

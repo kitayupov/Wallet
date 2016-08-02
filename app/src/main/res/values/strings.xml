@@ -21,6 +21,7 @@
     <string name="button_custom">Custom</string>
     <string name="hint_date_start">Start date</string>
     <string name="hint_date_finish">Finish date</string>
-    <string name="save">Save</string>
     <string name="select_dates">Select dates</string>
+    <string name="save">Save</string>
+    <string name="clean">Clean</string>
 </resources>

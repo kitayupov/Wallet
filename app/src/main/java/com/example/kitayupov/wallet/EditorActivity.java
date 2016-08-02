@@ -23,14 +23,16 @@ import android.widget.RadioButton;
 import android.widget.TimePicker;
 
 import com.example.kitayupov.wallet.dto.Transaction;
+import com.example.kitayupov.wallet.fragments.CalculateDialogFragment;
 import com.example.kitayupov.wallet.fragments.CategoryListFragment;
-import com.example.kitayupov.wallet.fragments.OnCompleteListener;
+import com.example.kitayupov.wallet.fragments.OnCalculateListener;
+import com.example.kitayupov.wallet.fragments.OnCategoryListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 
-public class EditorActivity extends AppCompatActivity implements OnCompleteListener,
+public class EditorActivity extends AppCompatActivity implements OnCategoryListener, OnCalculateListener,
         CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener {
 
     public static final int LAYOUT = R.layout.activity_editor;
@@ -186,8 +188,13 @@ public class EditorActivity extends AppCompatActivity implements OnCompleteListe
     }
 
     @Override
-    public void onComplete(String category) {
+    public void onCategorySelect(String category) {
         typeEditText.setText(category);
+    }
+
+    @Override
+    public void onCalculateComplete(float amount) {
+        amountEditText.setText(String.valueOf(amount));
     }
 
     @Override
@@ -222,19 +229,25 @@ public class EditorActivity extends AppCompatActivity implements OnCompleteListe
 
     @Override
     public void onClick(View view) {
-        DialogFragment dialogFragment = new CategoryListFragment();
+        DialogFragment categoryDialog = new CategoryListFragment();
+        Bundle bundle = new Bundle();
         switch (view.getId()) {
             case R.id.calculate_button:
-                startActivity(new Intent(this, CalculateActivity.class));
+                DialogFragment calculateDialog = new CalculateDialogFragment();
+                String amount = amountEditText.getText().toString();
+                if (!"".equals(amount)) {
+                    bundle.putFloat(MainActivity.AMOUNT, Float.parseFloat(amount));
+                    calculateDialog.setArguments(bundle);
+                }
+                calculateDialog.show(getFragmentManager(), "Calculator");
                 break;
             case R.id.select_type_button:
-                Bundle bundle = new Bundle();
                 bundle.putBoolean(MainActivity.IS_PROFIT, profitRadio.isChecked());
-                dialogFragment.setArguments(bundle);
-                dialogFragment.show(getFragmentManager(), "Categories");
+                categoryDialog.setArguments(bundle);
+                categoryDialog.show(getFragmentManager(), "Categories");
                 break;
             case R.id.select_desc_button:
-                dialogFragment.show(getFragmentManager(), "Descriptions");
+                categoryDialog.show(getFragmentManager(), "Descriptions");
                 break;
             case R.id.set_date_button:
             case R.id.date_edit_text:

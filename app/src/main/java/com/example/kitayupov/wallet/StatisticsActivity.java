@@ -206,7 +206,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void onComplete(Calendar cal1, Calendar cal2) {
+    public void onChange(Calendar cal1, Calendar cal2) {
         startDate = cal1.getTimeInMillis();
         finishDate = cal2.getTimeInMillis();
         if (startDate > finishDate) {

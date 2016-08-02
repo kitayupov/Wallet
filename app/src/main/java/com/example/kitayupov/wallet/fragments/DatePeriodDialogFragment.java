@@ -60,7 +60,7 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
         builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dateChangeListener.onComplete(startCalendar, finishCalendar);
+                dateChangeListener.onChange(startCalendar, finishCalendar);
             }
         });
 
@@ -120,7 +120,7 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
         try {
             dateChangeListener = (OnDateChangeListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnCompleteListener");
+            throw new ClassCastException(activity.toString() + " must implement OnCategoryListener");
         }
     }
 }
