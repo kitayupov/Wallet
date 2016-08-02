@@ -18,9 +18,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ActivityEditor"
+            android:name=".EditorActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".StatisticsActivity" />
+        <activity android:name=".CalculateActivity" />
     </application>
 
 </manifest>

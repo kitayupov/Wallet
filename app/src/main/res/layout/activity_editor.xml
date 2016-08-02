@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
     android:orientation="vertical"
-    tools:context="com.example.kitayupov.wallet.ActivityEditor">
+    tools:context=".EditorActivity">
 
     <LinearLayout
         android:id="@+id/toolbar_top"
@@ -93,7 +93,7 @@
                         android:textColor="@color/colorProfit">
 
                         <requestFocus />
-                        
+
                     </android.support.design.widget.TextInputEditText>
 
                 </android.support.design.widget.TextInputLayout>

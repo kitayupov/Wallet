@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 
-public class ActivityEditor extends AppCompatActivity implements OnCompleteListener,
+public class EditorActivity extends AppCompatActivity implements OnCompleteListener,
         CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener {
 
     public static final int LAYOUT = R.layout.activity_editor;
@@ -114,6 +114,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     }
 
     private void setButtonListeners() {
+        findViewById(R.id.calculate_button).setOnClickListener(this);
         findViewById(R.id.select_type_button).setOnClickListener(this);
         findViewById(R.id.select_desc_button).setOnClickListener(this);
         findViewById(R.id.set_date_button).setOnClickListener(this);
@@ -223,6 +224,9 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     public void onClick(View view) {
         DialogFragment dialogFragment = new CategoryListFragment();
         switch (view.getId()) {
+            case R.id.calculate_button:
+                startActivity(new Intent(this, CalculateActivity.class));
+                break;
             case R.id.select_type_button:
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(MainActivity.IS_PROFIT, profitRadio.isChecked());
@@ -240,7 +244,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     }
 
     private void setDate() {
-        new DatePickerDialog(ActivityEditor.this, d,
+        new DatePickerDialog(EditorActivity.this, d,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH))
@@ -248,7 +252,7 @@ public class ActivityEditor extends AppCompatActivity implements OnCompleteListe
     }
 
     private void setTime() {
-        new TimePickerDialog(ActivityEditor.this, t,
+        new TimePickerDialog(EditorActivity.this, t,
                 calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE), true)
                 .show();

@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, ActivityEditor.class);
+                    Intent intent = new Intent(context, EditorActivity.class);
                     startActivityForResult(intent, REQUEST_CODE);
                 }
             });
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(context, ActivityEditor.class);
+                Intent intent = new Intent(context, EditorActivity.class);
                 intent.putExtra(POSITION, position);
                 intent.putExtra(Transaction.class.getCanonicalName(), mAdapter.getItem(position));
                 startActivityForResult(intent, REQUEST_CODE);
