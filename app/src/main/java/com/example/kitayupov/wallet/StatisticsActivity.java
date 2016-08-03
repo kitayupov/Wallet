@@ -221,14 +221,9 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     // Receives start and finish dates from date period dialog fragment
     @Override
-    public void onDateChanged(Calendar cal1, Calendar cal2) {
-        startDate = cal1.getTimeInMillis();
-        finishDate = cal2.getTimeInMillis();
-        if (startDate > finishDate) {
-            long tmp = startDate;
-            startDate = finishDate;
-            finishDate = tmp;
-        }
+    public void onDateChanged(long date1, long date2) {
+        startDate = Math.min(date1, date2);
+        finishDate = Math.max(date1, date2);
         readDatabase();
     }
 }

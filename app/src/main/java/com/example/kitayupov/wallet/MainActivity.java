@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onDateChanged(Calendar cal1, Calendar cal2) {
-        adapter.setDates(cal1, cal2);
+    public void onDateChanged(long date1, long date2) {
+        adapter.setDates(date1, date2);
     }
 }

@@ -66,7 +66,7 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
         statisticsSpendFragment.setTitle(String.valueOf(totalSpend));
     }
 
-    public void setDates(Calendar cal1, Calendar cal2) {
-        statisticsProfitFragment.setDatePeriod(cal1, cal2);
+    public void setDates(long date1, long date2) {
+        statisticsProfitFragment.setDatePeriod(date1, date2);
     }
 }

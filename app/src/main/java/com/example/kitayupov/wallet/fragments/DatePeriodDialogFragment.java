@@ -82,7 +82,7 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
         builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dateChangeListener.onDateChanged(startCalendar, finishCalendar);
+                dateChangeListener.onDateChanged(startCalendar.getTimeInMillis(), finishCalendar.getTimeInMillis());
             }
         });
 

@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +40,8 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
     private Map<String, Float> map;
     private boolean isProfit;
 
-    private long startDate;
-    private long finishDate;
+    private static long startDate;
+    private static long finishDate;
 
     private SelectionTime selectionTime;
     private SelectionType selectionType;
@@ -195,20 +196,17 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
         switch (view.getId()) {
             case R.id.total_radio_button:
                 selectionTime = SelectionTime.TOTAL;
-                startDate = 0;
-                finishDate = System.currentTimeMillis();
+                setDatePeriod(0, System.currentTimeMillis());
                 break;
             case R.id.year_radio_button:
                 selectionTime = SelectionTime.YEAR;
                 calendar.set(calendar.get(Calendar.YEAR), 0, 1);
-                startDate = calendar.getTimeInMillis();
-                finishDate = System.currentTimeMillis();
+                setDatePeriod(calendar.getTimeInMillis(), System.currentTimeMillis());
                 break;
             case R.id.month_radio_button:
                 selectionTime = SelectionTime.MONTH;
                 calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
-                startDate = calendar.getTimeInMillis();
-                finishDate = System.currentTimeMillis();
+                setDatePeriod(calendar.getTimeInMillis(), System.currentTimeMillis());
                 break;
             case R.id.custom_radio_button:
                 selectionTime = SelectionTime.CUSTOM;
@@ -221,12 +219,13 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
                 break;
             case R.id.time_radio_button:
                 selectionType = SelectionType.BY_TIME;
+                readDatabase();
                 break;
             case R.id.type_radio_button:
                 selectionType = SelectionType.BY_TYPE;
+                readDatabase();
                 break;
         }
-        readDatabase();
     }
 
     private void setContext(Context context) {
@@ -237,14 +236,9 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
         this.isProfit = isProfit;
     }
 
-    public void setDatePeriod(Calendar cal1, Calendar cal2) {
-        startDate = cal1.getTimeInMillis();
-        finishDate = cal2.getTimeInMillis();
-        if (startDate > finishDate) {
-            long tmp = startDate;
-            startDate = finishDate;
-            finishDate = tmp;
-        }
+    public void setDatePeriod(long date1, long date2) {
+        startDate = Math.min(date1, date2);
+        finishDate = Math.max(date1, date2);
         readDatabase();
     }
 }
