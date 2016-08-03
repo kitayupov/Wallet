@@ -87,7 +87,7 @@ public class HistoryFragment extends AbstractTabFragment {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.context_menu_delete:
-//                        deleteTransaction(list);
+                        MainActivity.deleteTransaction(list);
                         list = new ArrayList<>();
                         mode.finish();
                         return true;

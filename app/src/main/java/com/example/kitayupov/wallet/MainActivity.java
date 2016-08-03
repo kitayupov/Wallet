@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TabHost;
+import android.widget.TextView;
 
 import com.example.kitayupov.wallet.dto.TransAdapter;
 import com.example.kitayupov.wallet.dto.TransDbHelper;
@@ -43,16 +45,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String IS_PROFIT = "is_profit";
     private static final String LOG_TAG = "MainActivity";
 
-    private ArrayList<Transaction> mArrayList;
-    private TransAdapter mAdapter;
-    private TransDbHelper dbHelper;
+    private static ArrayList<Transaction> mArrayList;
+    private static TransAdapter mAdapter;
+    private static TransDbHelper dbHelper;
     private Context context;
 
-    private float totalProfit;
-    private float totalSpend;
+    private static float totalProfit;
+    private static float totalSpend;
 
     private ViewPager viewPager;
-    private TabsFragmentAdapter adapter;
+    private static TabsFragmentAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +205,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         totalSpend -= item.isProfit() ? 0 : item.getAmount();
     }
 
-    private void setTotal() {
+    public static void deleteTransaction(ArrayList<Transaction> list) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        for (Transaction item : list) {
+            String whereClause =
+                    AMOUNT + "=? and " + TYPE + "=? and " +
+                            DESCRIPTION + "=? and " + DATE + "=? and " + IS_PROFIT + "=?";
+            String[] whereArgs = new String[]{
+                    String.valueOf(item.getAmount()), item.getType(), item.getDescription(),
+                    String.valueOf(item.getDate()), String.valueOf(item.isProfit() ? 1 : 0)};
+            db.delete(TransDbHelper.TABLE_NAME, whereClause, whereArgs);
+            mArrayList.remove(item);
+            if (item.isProfit()) {
+                totalProfit -= item.getAmount();
+            } else {
+                totalSpend -= item.getAmount();
+            }
+        }
+        mAdapter.notifyDataSetChanged();
+        setTotal();
+    }
+
+    private static void setTotal() {
         adapter.setTitles(totalProfit - totalSpend, totalProfit, totalSpend);
     }
 
