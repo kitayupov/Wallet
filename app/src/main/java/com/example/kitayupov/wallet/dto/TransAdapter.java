@@ -12,14 +12,15 @@ import com.example.kitayupov.wallet.MainActivity;
 import com.example.kitayupov.wallet.R;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class TransAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<Transaction> mArrayList;
+    private List<Transaction> mArrayList;
 
-    public TransAdapter(Context context, ArrayList<Transaction> mArrayList) {
+    public TransAdapter(Context context, List<Transaction> mArrayList) {
         this.context = context;
         this.mArrayList = mArrayList;
     }
@@ -64,5 +65,9 @@ public class TransAdapter extends BaseAdapter {
         } else {
             amountText.setTextColor(context.getResources().getColor(R.color.colorSpend));
         }
+    }
+
+    public void setData(List<Transaction> data) {
+        mArrayList = data;
     }
 }

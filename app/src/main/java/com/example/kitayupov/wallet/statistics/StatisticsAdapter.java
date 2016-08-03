@@ -12,14 +12,15 @@ import com.example.kitayupov.wallet.MainActivity;
 import com.example.kitayupov.wallet.R;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class StatisticsAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<StatisticsItem> mArrayList;
+    private List<StatisticsItem> mArrayList;
 
-    public StatisticsAdapter(Context context, ArrayList<StatisticsItem> mArrayList) {
+    public StatisticsAdapter(Context context, List<StatisticsItem> mArrayList) {
         this.context = context;
         this.mArrayList = mArrayList;
     }
@@ -61,5 +62,9 @@ public class StatisticsAdapter extends BaseAdapter {
         percentText.setText(String.format(Locale.ROOT, "%.2f", item.getPercent()));
 
         progressBar.setProgress((int) item.getPercent());
+    }
+
+    public void setData(List<StatisticsItem> data) {
+        mArrayList = data;
     }
 }

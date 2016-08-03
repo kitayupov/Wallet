@@ -7,7 +7,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
@@ -15,7 +14,6 @@ import android.widget.DatePicker;
 import com.example.kitayupov.wallet.R;
 import com.example.kitayupov.wallet.StatisticsActivity;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DatePeriodDialogFragment extends DialogFragment implements View.OnClickListener {
@@ -26,7 +24,7 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
     private DatePicker startDatePicker;
     private DatePicker finishDatePicker;
 
-    private OnDateChangeListener dateChangeListener;
+    private OnDateChangedListener dateChangeListener;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -84,7 +82,7 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
         builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dateChangeListener.onChange(startCalendar, finishCalendar);
+                dateChangeListener.onDateChanged(startCalendar, finishCalendar);
             }
         });
 
@@ -144,7 +142,7 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            dateChangeListener = (OnDateChangeListener) activity;
+            dateChangeListener = (OnDateChangedListener) activity;
         } catch (final ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnCategoryListener");
         }

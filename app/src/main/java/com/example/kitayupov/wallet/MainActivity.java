@@ -7,30 +7,29 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.kitayupov.wallet.dto.TransAdapter;
 import com.example.kitayupov.wallet.dto.TransDbHelper;
 import com.example.kitayupov.wallet.dto.Transaction;
+import com.example.kitayupov.wallet.fragments.OnDateChangedListener;
+import com.example.kitayupov.wallet.fragments.TabsFragmentAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnDateChangedListener {
 
     public static final int LAYOUT = R.layout.activity_main;
 
@@ -44,18 +43,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String IS_PROFIT = "is_profit";
     private static final String LOG_TAG = "MainActivity";
 
-    private ListView mListView;
     private ArrayList<Transaction> mArrayList;
     private TransAdapter mAdapter;
     private TransDbHelper dbHelper;
     private Context context;
 
-    private TextView totalTextView;
-    private TextView profitTextView;
-    private TextView spendTextView;
-
     private float totalProfit;
     private float totalSpend;
+
+    private ViewPager viewPager;
+    private TabsFragmentAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,22 +77,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initialize() {
-        profitTextView = (TextView) findViewById(R.id.profit_text_view);
-        spendTextView = (TextView) findViewById(R.id.spend_text_view);
-        totalTextView = (TextView) findViewById(R.id.total_text_view);
-
-        profitTextView.setOnClickListener(this);
-        spendTextView.setOnClickListener(this);
-
         mArrayList = new ArrayList<>();
         dbHelper = new TransDbHelper(context);
         mAdapter = new TransAdapter(context, mArrayList);
-        mListView = (ListView) findViewById(R.id.transaction_list_view);
-        mListView.setAdapter(mAdapter);
+
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        adapter = new TabsFragmentAdapter(this, getSupportFragmentManager(), mArrayList);
+        viewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
 
         getTypeMaps();
         readDatabase();
-        registerContextualActionBar();
     }
 
     private void getTypeMaps() {
@@ -143,87 +137,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(LOG_TAG, "total read " + mArrayList.size());
             setTotal();
         }
-    }
-
-    private void registerContextualActionBar() {
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(context, EditorActivity.class);
-                intent.putExtra(POSITION, position);
-                intent.putExtra(Transaction.class.getCanonicalName(), mAdapter.getItem(position));
-                startActivityForResult(intent, REQUEST_CODE);
-            }
-        });
-
-        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-            ArrayList<Transaction> list = new ArrayList<>();
-
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position,
-                                                  long id, boolean checked) {
-                mode.setTitle(String.valueOf(mListView.getCheckedItemCount()));
-                Transaction item = mAdapter.getItem(position);
-                if (checked) {
-                    list.add(item);
-                } else {
-                    list.remove(item);
-                }
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.context_menu_delete:
-                        deleteTransaction(list);
-                        list = new ArrayList<>();
-                        mode.finish();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.menu_contextual, menu);
-                return true;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                // Здесь можно обновить явление, если CAB был удален. По умолчанию с выбранных элементов снимается выбор.
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                // Здесь можно обновлять CAB при запросе invalidate()
-                return false;
-            }
-        });
-    }
-
-    private void deleteTransaction(ArrayList<Transaction> list) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        for (Transaction item : list) {
-            String whereClause =
-                    AMOUNT + "=? and " + TYPE + "=? and " +
-                            DESCRIPTION + "=? and " + DATE + "=? and " + IS_PROFIT + "=?";
-            String[] whereArgs = new String[]{
-                    String.valueOf(item.getAmount()), item.getType(), item.getDescription(),
-                    String.valueOf(item.getDate()), String.valueOf(item.isProfit() ? 1 : 0)};
-            db.delete(TransDbHelper.TABLE_NAME, whereClause, whereArgs);
-            mArrayList.remove(item);
-            if (item.isProfit()) {
-                totalProfit -= item.getAmount();
-            } else {
-                totalSpend -= item.getAmount();
-            }
-        }
-        mAdapter.notifyDataSetChanged();
-        setTotal();
     }
 
     @Override
@@ -291,9 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setTotal() {
-        profitTextView.setText(stringFormat(totalProfit));
-        spendTextView.setText(stringFormat(totalSpend));
-        totalTextView.setText(stringFormat(totalProfit - totalSpend));
+        adapter.setTitles(totalProfit - totalSpend, totalProfit, totalSpend);
     }
 
     @Override
@@ -341,5 +252,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void onDateChanged(Calendar cal1, Calendar cal2) {
+        adapter.setDates(cal1, cal2);
     }
 }

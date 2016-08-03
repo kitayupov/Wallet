@@ -1,17 +1,19 @@
-package com.example.kitayupov.wallet;
+package com.example.kitayupov.wallet.fragments;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.example.kitayupov.wallet.Constants;
+import com.example.kitayupov.wallet.MainActivity;
+import com.example.kitayupov.wallet.R;
 import com.example.kitayupov.wallet.dto.TransDbHelper;
-import com.example.kitayupov.wallet.fragments.DatePeriodDialogFragment;
-import com.example.kitayupov.wallet.fragments.OnDateChangedListener;
 import com.example.kitayupov.wallet.statistics.StatisticsAdapter;
 import com.example.kitayupov.wallet.statistics.StatisticsItem;
 
@@ -29,7 +31,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class StatisticsActivity extends AppCompatActivity implements View.OnClickListener, OnDateChangedListener {
+public class StatisticsFragment extends AbstractTabFragment implements View.OnClickListener {
+    private static final int LAYOUT = R.layout.fragment_statistics;
+
+    private Context context;
 
     private Map<String, Float> map;
     private boolean isProfit;
@@ -39,6 +44,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     private SelectionTime selectionTime;
     private SelectionType selectionType;
+
     public static final String START_DATE = "Statistics.StartDate";
     public static final String FINISH_DATE = "Statistics.FinishDate";
 
@@ -46,27 +52,31 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     private enum SelectionType {BY_TYPE, BY_TIME;}
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
-        setNotificationBarColor();
-        initialize();
-        readDatabase();
-        setRadioButtonsListeners();
+    public static StatisticsFragment getInstance(Context context, boolean isProfit) {
+        Bundle args = new Bundle();
+        StatisticsFragment fragment = new StatisticsFragment();
+        fragment.setArguments(args);
+        fragment.setContext(context);
+        fragment.setTitle(isProfit ? "Profit" : "Spend");
+        fragment.setIsProfit(isProfit);
+
+        return fragment;
     }
 
-    // Sets notification bar color
-    private void setNotificationBarColor() {
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(LAYOUT, container, false);
+
+        initialize();
+        setRadioButtonsListeners();
+        readDatabase();
+
+        return view;
     }
 
     // Initializes dates
     private void initialize() {
-        isProfit = getIntent().getBooleanExtra(MainActivity.IS_PROFIT, true);
 
         startDate = 0;
 
@@ -83,20 +93,20 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
 
     // Sets radio button listeners
     private void setRadioButtonsListeners() {
-        findViewById(R.id.total_radio_button).setOnClickListener(this);
-        findViewById(R.id.year_radio_button).setOnClickListener(this);
-        findViewById(R.id.month_radio_button).setOnClickListener(this);
-        findViewById(R.id.custom_radio_button).setOnClickListener(this);
+        view.findViewById(R.id.total_radio_button).setOnClickListener(this);
+        view.findViewById(R.id.year_radio_button).setOnClickListener(this);
+        view.findViewById(R.id.month_radio_button).setOnClickListener(this);
+        view.findViewById(R.id.custom_radio_button).setOnClickListener(this);
 
-        findViewById(R.id.type_radio_button).setOnClickListener(this);
-        findViewById(R.id.time_radio_button).setOnClickListener(this);
+        view.findViewById(R.id.type_radio_button).setOnClickListener(this);
+        view.findViewById(R.id.time_radio_button).setOnClickListener(this);
     }
 
     // Reads transaction database
     private void readDatabase() {
         float total = 0f;
         map = new HashMap<>();
-        TransDbHelper dbHelper = new TransDbHelper(this);
+        TransDbHelper dbHelper = new TransDbHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] columns = {MainActivity.AMOUNT, MainActivity.TYPE, MainActivity.DATE};
         String selection = MainActivity.IS_PROFIT + " = ? AND " + MainActivity.DATE + " >= ? AND " + MainActivity.DATE + " <= ?";
@@ -152,8 +162,8 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         for (String type : sortedMap.keySet()) {
             stats.add(new StatisticsItem(type, sortedMap.get(type), sortedMap.get(type) / total * 100));
         }
-        StatisticsAdapter adapter = new StatisticsAdapter(this, stats);
-        ((ListView) findViewById(R.id.list_view)).setAdapter(adapter);
+        StatisticsAdapter adapter = new StatisticsAdapter(context, stats);
+        ((ListView) view.findViewById(R.id.list_view)).setAdapter(adapter);
     }
 
     // Sorts type map by amount sum value
@@ -207,7 +217,7 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
                 bundle.putLong(START_DATE, startDate);
                 bundle.putLong(FINISH_DATE, finishDate);
                 dialogFragment.setArguments(bundle);
-                dialogFragment.show(getFragmentManager(), "Dates");
+                dialogFragment.show(getActivity().getFragmentManager(), "Dates");
                 break;
             case R.id.time_radio_button:
                 selectionType = SelectionType.BY_TIME;
@@ -219,9 +229,15 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         readDatabase();
     }
 
-    // Receives start and finish dates from date period dialog fragment
-    @Override
-    public void onDateChanged(Calendar cal1, Calendar cal2) {
+    private void setContext(Context context) {
+        this.context = context;
+    }
+
+    private void setIsProfit(boolean isProfit) {
+        this.isProfit = isProfit;
+    }
+
+    public void setDatePeriod(Calendar cal1, Calendar cal2) {
         startDate = cal1.getTimeInMillis();
         finishDate = cal2.getTimeInMillis();
         if (startDate > finishDate) {
@@ -232,3 +248,4 @@ public class StatisticsActivity extends AppCompatActivity implements View.OnClic
         readDatabase();
     }
 }
+
