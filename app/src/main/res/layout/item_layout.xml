@@ -13,7 +13,8 @@
         android:id="@+id/amount_text_view"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/type_text_view"
@@ -21,7 +22,8 @@
         android:layout_weight="2"
         android:singleLine="true"
         android:layout_height="wrap_content"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/date_text_view"
