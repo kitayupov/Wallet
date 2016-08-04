@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.kitayupov.wallet.Constants;
 import com.example.kitayupov.wallet.MainActivity;
 import com.example.kitayupov.wallet.R;
 
@@ -83,8 +84,8 @@ public class CalculateDialogFragment extends DialogFragment implements View.OnCl
         editText = (EditText) view.findViewById(R.id.edit);
         editText.requestFocus();
 
-        if (getArguments() != null && getArguments().containsKey(MainActivity.AMOUNT)) {
-            editText.setText(String.valueOf(getArguments().getFloat(MainActivity.AMOUNT)));
+        if (getArguments() != null && getArguments().containsKey(Constants.AMOUNT)) {
+            editText.setText(String.valueOf(getArguments().getFloat(Constants.AMOUNT)));
         }
 
         view.findViewById(R.id.button_add).setOnClickListener(this);

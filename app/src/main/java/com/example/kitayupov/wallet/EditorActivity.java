@@ -35,7 +35,7 @@ import java.util.Map;
 public class EditorActivity extends AppCompatActivity implements OnCategorySelectListener, OnCalculateListener,
         CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener {
 
-    public static final int LAYOUT = R.layout.activity_editor;
+    private static final int LAYOUT = R.layout.activity_editor;
 
     private EditText amountEditText;
     private AutoCompleteTextView typeEditText;
@@ -79,7 +79,7 @@ public class EditorActivity extends AppCompatActivity implements OnCategorySelec
         spendRadio = (RadioButton) findViewById(R.id.spend_radio_button);
 
         Intent intent = getIntent();
-        position = intent.getIntExtra(MainActivity.POSITION, Integer.MIN_VALUE);
+        position = intent.getIntExtra(Constants.POSITION, Integer.MIN_VALUE);
         transaction = intent.getParcelableExtra(Transaction.class.getCanonicalName());
 
         if (transaction == null) {
@@ -170,7 +170,7 @@ public class EditorActivity extends AppCompatActivity implements OnCategorySelec
     private void sendResult(Transaction transaction) {
         Intent intent = new Intent();
         intent.putExtra(Transaction.class.getCanonicalName(), transaction);
-        intent.putExtra(MainActivity.POSITION, position);
+        intent.putExtra(Constants.POSITION, position);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -183,7 +183,7 @@ public class EditorActivity extends AppCompatActivity implements OnCategorySelec
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(MainActivity.POSITION, position);
+        outState.putInt(Constants.POSITION, position);
         super.onSaveInstanceState(outState);
     }
 
@@ -236,13 +236,13 @@ public class EditorActivity extends AppCompatActivity implements OnCategorySelec
                 DialogFragment calculateDialog = new CalculateDialogFragment();
                 String amount = amountEditText.getText().toString();
                 if (!"".equals(amount)) {
-                    bundle.putFloat(MainActivity.AMOUNT, Float.parseFloat(amount));
+                    bundle.putFloat(Constants.AMOUNT, Float.parseFloat(amount));
                     calculateDialog.setArguments(bundle);
                 }
                 calculateDialog.show(getFragmentManager(), "Calculator");
                 break;
             case R.id.select_type_button:
-                bundle.putBoolean(MainActivity.IS_PROFIT, profitRadio.isChecked());
+                bundle.putBoolean(Constants.IS_PROFIT, profitRadio.isChecked());
                 categoryDialog.setArguments(bundle);
                 categoryDialog.show(getFragmentManager(), "Categories");
                 break;

@@ -33,7 +33,10 @@ import java.util.Comparator;
 import java.util.List;
 
 public class HistoryFragment extends AbstractTabFragment {
+
     private static final int LAYOUT = R.layout.fragment_history;
+
+    public static final String LOG_TAG = "HistoryFragment";
 
     private List<Transaction> mArrayList;
     private TransAdapter mAdapter;
@@ -82,9 +85,9 @@ public class HistoryFragment extends AbstractTabFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(context, EditorActivity.class);
-                intent.putExtra(MainActivity.POSITION, position);
+                intent.putExtra(Constants.POSITION, position);
                 intent.putExtra(Transaction.class.getCanonicalName(), mAdapter.getItem(position));
-                startActivityForResult(intent, MainActivity.REQUEST_CODE);
+                startActivityForResult(intent, Constants.REQUEST_CODE);
             }
         });
 
@@ -139,20 +142,20 @@ public class HistoryFragment extends AbstractTabFragment {
 
     public void createTransaction() {
         Intent intent = new Intent(context, EditorActivity.class);
-        startActivityForResult(intent, MainActivity.REQUEST_CODE);
+        startActivityForResult(intent, Constants.REQUEST_CODE);
     }
 
     private void readDatabase() {
         totalProfit = 0;
         totalSpend = 0;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(TransDbHelper.TABLE_NAME, null, null, null, null, null, MainActivity.DATE);
+        Cursor cursor = db.query(Constants.TABLE_NAME, null, null, null, null, null, Constants.DATE);
         if (cursor.moveToFirst()) {
-            int amountIndex = cursor.getColumnIndex(MainActivity.AMOUNT);
-            int typeIndex = cursor.getColumnIndex(MainActivity.TYPE);
-            int descIndex = cursor.getColumnIndex(MainActivity.DESCRIPTION);
-            int dateIndex = cursor.getColumnIndex(MainActivity.DATE);
-            int isProfitIndex = cursor.getColumnIndex(MainActivity.IS_PROFIT);
+            int amountIndex = cursor.getColumnIndex(Constants.AMOUNT);
+            int typeIndex = cursor.getColumnIndex(Constants.TYPE);
+            int descIndex = cursor.getColumnIndex(Constants.DESCRIPTION);
+            int dateIndex = cursor.getColumnIndex(Constants.DATE);
+            int isProfitIndex = cursor.getColumnIndex(Constants.IS_PROFIT);
             do {
                 float amount = cursor.getFloat(amountIndex);
                 String type = cursor.getString(typeIndex);
@@ -168,10 +171,10 @@ public class HistoryFragment extends AbstractTabFragment {
                 }
                 Transaction item = new Transaction(amount, type, desc, date, isProfit);
                 mArrayList.add(item);
-                Log.d(MainActivity.LOG_TAG, "read " + item.toString());
+                Log.d(LOG_TAG, "read " + item.toString());
             } while (cursor.moveToNext());
             cursor.close();
-            Log.d(MainActivity.LOG_TAG, "all read " + mArrayList.size());
+            Log.d(LOG_TAG, "all read " + mArrayList.size());
             MainActivity.setTotal(totalProfit, totalSpend);
         }
     }
@@ -180,9 +183,9 @@ public class HistoryFragment extends AbstractTabFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == MainActivity.RESULT_OK) {
             switch (requestCode) {
-                case MainActivity.REQUEST_CODE:
+                case Constants.REQUEST_CODE:
                     if (data != null) {
-                        int position = data.getIntExtra(MainActivity.POSITION, Integer.MIN_VALUE);
+                        int position = data.getIntExtra(Constants.POSITION, Integer.MIN_VALUE);
                         Transaction item = data.getParcelableExtra(Transaction.class.getCanonicalName());
                         saveTransaction(position, item);
                     }
@@ -199,18 +202,18 @@ public class HistoryFragment extends AbstractTabFragment {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(MainActivity.AMOUNT, item.getAmount());
-        values.put(MainActivity.TYPE, item.getType());
-        values.put(MainActivity.DESCRIPTION, item.getDescription());
-        values.put(MainActivity.DATE, item.getDate());
-        values.put(MainActivity.IS_PROFIT, item.isProfit() ? 1 : 0);
+        values.put(Constants.AMOUNT, item.getAmount());
+        values.put(Constants.TYPE, item.getType());
+        values.put(Constants.DESCRIPTION, item.getDescription());
+        values.put(Constants.DATE, item.getDate());
+        values.put(Constants.IS_PROFIT, item.isProfit() ? 1 : 0);
 
         if (position == mArrayList.size()) {
-            db.insert(TransDbHelper.TABLE_NAME, null, values);
-            Log.d(MainActivity.LOG_TAG, "insert #" + position + item.toString());
+            db.insert(Constants.TABLE_NAME, null, values);
+            Log.d(LOG_TAG, "insert #" + position + item.toString());
         } else {
             updateRow(mArrayList.get(position), values);
-            Log.d(MainActivity.LOG_TAG, "update #" + position + item.toString());
+            Log.d(LOG_TAG, "update #" + position + item.toString());
         }
 
         totalProfit += item.isProfit() ? item.getAmount() : 0;
@@ -228,9 +231,9 @@ public class HistoryFragment extends AbstractTabFragment {
 
     private void updateRow(Transaction item, ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String whereClause = MainActivity.DATE + "=?";
+        String whereClause = Constants.DATE + "=?";
         String[] whereArgs = new String[]{String.valueOf(item.getDate())};
-        int id = db.update(TransDbHelper.TABLE_NAME, values, whereClause, whereArgs);
+        int id = db.update(Constants.TABLE_NAME, values, whereClause, whereArgs);
         mArrayList.remove(item);
         totalProfit -= item.isProfit() ? item.getAmount() : 0;
         totalSpend -= item.isProfit() ? 0 : item.getAmount();
@@ -240,12 +243,12 @@ public class HistoryFragment extends AbstractTabFragment {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         for (Transaction item : list) {
             String whereClause =
-                    MainActivity.AMOUNT + "=? and " + MainActivity.TYPE + "=? and " +
-                            MainActivity.DESCRIPTION + "=? and " + MainActivity.DATE + "=? and " + MainActivity.IS_PROFIT + "=?";
+                    Constants.AMOUNT + "=? and " + Constants.TYPE + "=? and " +
+                            Constants.DESCRIPTION + "=? and " + Constants.DATE + "=? and " + Constants.IS_PROFIT + "=?";
             String[] whereArgs = new String[]{
                     String.valueOf(item.getAmount()), item.getType(), item.getDescription(),
                     String.valueOf(item.getDate()), String.valueOf(item.isProfit() ? 1 : 0)};
-            db.delete(TransDbHelper.TABLE_NAME, whereClause, whereArgs);
+            db.delete(Constants.TABLE_NAME, whereClause, whereArgs);
             mArrayList.remove(item);
             if (item.isProfit()) {
                 totalProfit -= item.getAmount();
@@ -263,7 +266,7 @@ public class HistoryFragment extends AbstractTabFragment {
 
     public void clearDatabase() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.execSQL("delete from " + TransDbHelper.TABLE_NAME);
+        db.execSQL("delete from " + Constants.TABLE_NAME);
         mArrayList.clear();
         mAdapter.notifyDataSetChanged();
         totalProfit = totalSpend = 0;

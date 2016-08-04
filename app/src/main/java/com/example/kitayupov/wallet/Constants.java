@@ -3,6 +3,19 @@ package com.example.kitayupov.wallet;
 import java.util.Map;
 
 public class Constants {
+
+    public static final int REQUEST_CODE = 200;
+
+    public static final String POSITION = "position";
+    public static final String AMOUNT = "amount";
+    public static final String TYPE = "type";
+    public static final String DESCRIPTION = "description";
+    public static final String DATE = "date";
+    public static final String IS_PROFIT = "is_profit";
+
+    public static final String TRANSACTIONS_DB = "transactions.db";
+    public static final String TABLE_NAME = "Transactions";
+
     public static Map<String, Integer> profitMap;
     public static Map<String, Integer> spendMap;
     public static Map<String, Integer> descriptionMap;

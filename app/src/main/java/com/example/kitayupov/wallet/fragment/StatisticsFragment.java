@@ -12,12 +12,11 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 
 import com.example.kitayupov.wallet.Constants;
-import com.example.kitayupov.wallet.MainActivity;
 import com.example.kitayupov.wallet.R;
-import com.example.kitayupov.wallet.dialog.DatePeriodSelectDialogFragment;
-import com.example.kitayupov.wallet.dto.TransDbHelper;
 import com.example.kitayupov.wallet.adapter.StatisticsAdapter;
+import com.example.kitayupov.wallet.dialog.DatePeriodSelectDialogFragment;
 import com.example.kitayupov.wallet.dto.StatisticsItem;
+import com.example.kitayupov.wallet.dto.TransDbHelper;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -124,14 +123,14 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
         map = new HashMap<>();
         TransDbHelper dbHelper = new TransDbHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] columns = {MainActivity.AMOUNT, MainActivity.TYPE, MainActivity.DATE};
-        String selection = MainActivity.IS_PROFIT + " = ? AND " + MainActivity.DATE + " >= ? AND " + MainActivity.DATE + " <= ?";
+        String[] columns = {Constants.AMOUNT, Constants.TYPE, Constants.DATE};
+        String selection = Constants.IS_PROFIT + " = ? AND " + Constants.DATE + " >= ? AND " + Constants.DATE + " <= ?";
         String[] selectionArgs = {String.valueOf(isProfit ? 1 : 0), String.valueOf(startDate), String.valueOf(finishDate)};
-        Cursor cursor = db.query(TransDbHelper.TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+        Cursor cursor = db.query(Constants.TABLE_NAME, columns, selection, selectionArgs, null, null, null);
         if (cursor.moveToFirst()) {
-            int amountIndex = cursor.getColumnIndex(MainActivity.AMOUNT);
-            int typeIndex = cursor.getColumnIndex(MainActivity.TYPE);
-            int dateIndex = cursor.getColumnIndex(MainActivity.DATE);
+            int amountIndex = cursor.getColumnIndex(Constants.AMOUNT);
+            int typeIndex = cursor.getColumnIndex(Constants.TYPE);
+            int dateIndex = cursor.getColumnIndex(Constants.DATE);
             do {
                 float amount = cursor.getFloat(amountIndex);
                 String type = cursor.getString(typeIndex);

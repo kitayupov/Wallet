@@ -25,17 +25,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements OnDatePeriodSelectListener, TabLayout.OnTabSelectedListener {
 
-    public static final int LAYOUT = R.layout.activity_main;
-
-    public static final int REQUEST_CODE = 0;
-
-    public static final String POSITION = "position";
-    public static final String AMOUNT = "amount";
-    public static final String TYPE = "type";
-    public static final String DESCRIPTION = "description";
-    public static final String DATE = "date";
-    public static final String IS_PROFIT = "is_profit";
-    public static final String LOG_TAG = "MainActivity";
+    private static final int LAYOUT = R.layout.activity_main;
 
     private Context context;
 
