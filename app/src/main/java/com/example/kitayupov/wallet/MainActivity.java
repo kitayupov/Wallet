@@ -206,10 +206,10 @@ public class MainActivity extends AppCompatActivity implements OnDateChangedList
         fab.clearAnimation();
         // Scale down animation
         if (position == 0) {
-            ScaleAnimation shrink = new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            shrink.setDuration(150);     // animation duration in milliseconds
-            shrink.setInterpolator(new AccelerateInterpolator());
-            shrink.setAnimationListener(new Animation.AnimationListener() {
+            ScaleAnimation expand = new ScaleAnimation(0.2f, 1.2f, 0.2f, 1.2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            expand.setDuration(200);
+            expand.setInterpolator(new AccelerateInterpolator());
+            expand.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
 
@@ -217,6 +217,10 @@ public class MainActivity extends AppCompatActivity implements OnDateChangedList
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
+                    ScaleAnimation shrink =  new ScaleAnimation(1.2f, 1f, 1.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                    shrink.setDuration(100);
+                    shrink.setInterpolator(new AccelerateInterpolator());
+                    fab.startAnimation(shrink);
                     fab.setVisibility(View.VISIBLE);
                 }
 
@@ -225,10 +229,16 @@ public class MainActivity extends AppCompatActivity implements OnDateChangedList
 
                 }
             });
-            fab.startAnimation(shrink);
+            fab.startAnimation(expand);
         } else if (fab.getVisibility() == View.VISIBLE) {
-            ScaleAnimation shrink = new ScaleAnimation(1f, 0.2f, 1f, 0.2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            shrink.setDuration(150);     // animation duration in milliseconds
+
+            ScaleAnimation expand =  new ScaleAnimation(1f, 1.2f, 1f, 1.2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            expand.setDuration(100);
+            expand.setInterpolator(new AccelerateInterpolator());
+            fab.startAnimation(expand);
+
+            ScaleAnimation shrink = new ScaleAnimation(1.2f, 0.2f, 1.2f, 0.2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            shrink.setDuration(200);
             shrink.setInterpolator(new DecelerateInterpolator());
             shrink.setAnimationListener(new Animation.AnimationListener() {
                 @Override
