@@ -5,11 +5,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.RadioButton;
 
 import com.example.kitayupov.wallet.Constants;
 import com.example.kitayupov.wallet.MainActivity;
@@ -49,6 +49,13 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
     public static final String START_DATE = "Statistics.StartDate";
     public static final String FINISH_DATE = "Statistics.FinishDate";
 
+    private RadioButton total_time;
+    private RadioButton year_time;
+    private RadioButton month_time;
+    private RadioButton custom_time;
+    private RadioButton type_select;
+    private RadioButton time_select;
+
     private enum SelectionTime {TOTAL, YEAR, MONTH, CUSTOM}
 
     private enum SelectionType {BY_TYPE, BY_TIME;}
@@ -60,6 +67,7 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
         fragment.setContext(context);
         fragment.setTitle(isProfit ? "Profit" : "Spend");
         fragment.setIsProfit(isProfit);
+        fragment.initialize();
 
         return fragment;
     }
@@ -69,7 +77,6 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(LAYOUT, container, false);
 
-        initialize();
         setRadioButtonsListeners();
         readDatabase();
 
@@ -78,7 +85,6 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
 
     // Initializes dates
     private void initialize() {
-
         startDate = 0;
 
         Calendar current = Calendar.getInstance();
@@ -94,20 +100,26 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
 
     // Sets radio button listeners
     private void setRadioButtonsListeners() {
-        view.findViewById(R.id.total_radio_button).setOnClickListener(this);
-        view.findViewById(R.id.year_radio_button).setOnClickListener(this);
-        view.findViewById(R.id.month_radio_button).setOnClickListener(this);
-        view.findViewById(R.id.custom_radio_button).setOnClickListener(this);
+        total_time = (RadioButton) view.findViewById(R.id.total_radio_button);
+        year_time = (RadioButton) view.findViewById(R.id.year_radio_button);
+        month_time = (RadioButton) view.findViewById(R.id.month_radio_button);
+        custom_time = (RadioButton) view.findViewById(R.id.custom_radio_button);
 
-        view.findViewById(R.id.type_radio_button).setOnClickListener(this);
-        view.findViewById(R.id.time_radio_button).setOnClickListener(this);
+        type_select = (RadioButton) view.findViewById(R.id.type_radio_button);
+        time_select = (RadioButton) view.findViewById(R.id.time_radio_button);
+
+        total_time.setOnClickListener(this);
+        year_time.setOnClickListener(this);
+        month_time.setOnClickListener(this);
+        custom_time.setOnClickListener(this);
+
+        type_select.setOnClickListener(this);
+        time_select.setOnClickListener(this);
     }
 
     // Reads transaction database
     private void readDatabase() {
-        Log.e("kitayupov", new SimpleDateFormat("dd/MM/yyyy").format(startDate));
-        Log.e("kitayupov", new SimpleDateFormat("dd/MM/yyyy").format(finishDate));
-        float total = 0f;
+        float total = 0;
         map = new HashMap<>();
         TransDbHelper dbHelper = new TransDbHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -116,7 +128,6 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
         String[] selectionArgs = {String.valueOf(isProfit ? 1 : 0), String.valueOf(startDate), String.valueOf(finishDate)};
         Cursor cursor = db.query(TransDbHelper.TABLE_NAME, columns, selection, selectionArgs, null, null, null);
         if (cursor.moveToFirst()) {
-            Log.e("kitayupov", "cursor in");
             int amountIndex = cursor.getColumnIndex(MainActivity.AMOUNT);
             int typeIndex = cursor.getColumnIndex(MainActivity.TYPE);
             int dateIndex = cursor.getColumnIndex(MainActivity.DATE);
@@ -133,7 +144,6 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
             } while (cursor.moveToNext());
             cursor.close();
         }
-        Log.e("kitayupov", "cursor out");
         setResult(total);
     }
 
@@ -192,26 +202,7 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
 
     @Override
     public void onClick(View view) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.clear(Calendar.MINUTE);
-        calendar.clear(Calendar.SECOND);
-        calendar.clear(Calendar.MILLISECOND);
         switch (view.getId()) {
-            case R.id.total_radio_button:
-                selectionTime = SelectionTime.TOTAL;
-                setDatePeriod(0, System.currentTimeMillis());
-                break;
-            case R.id.year_radio_button:
-                selectionTime = SelectionTime.YEAR;
-                calendar.set(calendar.get(Calendar.YEAR), 0, 1);
-                setDatePeriod(calendar.getTimeInMillis(), System.currentTimeMillis());
-                break;
-            case R.id.month_radio_button:
-                selectionTime = SelectionTime.MONTH;
-                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
-                setDatePeriod(calendar.getTimeInMillis(), System.currentTimeMillis());
-                break;
             case R.id.custom_radio_button:
                 selectionTime = SelectionTime.CUSTOM;
                 DatePeriodDialogFragment dialogFragment = new DatePeriodDialogFragment();
@@ -222,12 +213,55 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
                 dialogFragment.show(getActivity().getFragmentManager(), "Dates");
                 break;
             case R.id.time_radio_button:
-                selectionType = SelectionType.BY_TIME;
+            case R.id.total_radio_button:
+            case R.id.year_radio_button:
+            case R.id.month_radio_button:
+            case R.id.type_radio_button:
+            default:
+                getSelectionMode();
                 readDatabase();
                 break;
-            case R.id.type_radio_button:
-                selectionType = SelectionType.BY_TYPE;
-                readDatabase();
+        }
+    }
+
+    private void getSelectionMode() {
+        if (total_time.isChecked()) {
+            selectionTime = SelectionTime.TOTAL;
+        } else if (year_time.isChecked()) {
+            selectionTime = SelectionTime.YEAR;
+        } else if (month_time.isChecked()) {
+            selectionTime = SelectionTime.MONTH;
+        } else {
+            selectionTime = SelectionTime.CUSTOM;
+        }
+        if (type_select.isChecked()) {
+            selectionType = SelectionType.BY_TYPE;
+        } else {
+            selectionType = SelectionType.BY_TIME;
+        }
+        setDateForSelection();
+    }
+
+    private void setDateForSelection() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.clear(Calendar.MINUTE);
+        calendar.clear(Calendar.SECOND);
+        calendar.clear(Calendar.MILLISECOND);
+        switch (selectionTime) {
+            case TOTAL:
+                setDatePeriod(0, System.currentTimeMillis());
+                break;
+            case YEAR:
+                calendar.set(calendar.get(Calendar.YEAR), 0, 1);
+                setDatePeriod(calendar.getTimeInMillis(), System.currentTimeMillis());
+                break;
+            case MONTH:
+                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
+                setDatePeriod(calendar.getTimeInMillis(), System.currentTimeMillis());
+                break;
+            case CUSTOM:
+                setDatePeriod(startDate, finishDate);
                 break;
         }
     }

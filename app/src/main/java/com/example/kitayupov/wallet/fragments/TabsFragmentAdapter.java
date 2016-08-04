@@ -7,26 +7,19 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.kitayupov.wallet.dto.Transaction;
 
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class TabsFragmentAdapter extends FragmentPagerAdapter {
 
     private Map<Integer, AbstractTabFragment> tabs;
-    private Context context;
-
-    private List<Transaction> data;
 
     private HistoryFragment historyFragment;
     private StatisticsFragment statisticsProfitFragment;
     private StatisticsFragment statisticsSpendFragment;
 
-    public TabsFragmentAdapter(Context context, FragmentManager fm, List<Transaction> data) {
+    public TabsFragmentAdapter(Context context, FragmentManager fm) {
         super(fm);
-        this.data = data;
-        this.context = context;
         initTabsMap(context);
     }
 
@@ -47,7 +40,7 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
 
     private void initTabsMap(Context context) {
         tabs = new HashMap<>();
-        historyFragment = HistoryFragment.getInstance(context, data);
+        historyFragment = HistoryFragment.getInstance(context);
         statisticsProfitFragment = StatisticsFragment.getInstance(context, true);
         statisticsSpendFragment = StatisticsFragment.getInstance(context, false);
         tabs.put(0, historyFragment);
@@ -55,12 +48,16 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
         tabs.put(2, statisticsSpendFragment);
     }
 
-    public void setData(List<Transaction> data) {
-        this.data = data;
-        historyFragment.refreshList(data);
-    }
-
     public void setDates(long date1, long date2) {
         statisticsProfitFragment.setDatePeriod(date1, date2);
+        statisticsSpendFragment.setDatePeriod(date1, date2);
+    }
+
+    public void clearDatabase() {
+        historyFragment.clearDatabase();
+    }
+
+    public void saveTransaction(int position, Transaction item) {
+        historyFragment.saveTransaction(position, item);
     }
 }

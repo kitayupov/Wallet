@@ -1,10 +1,7 @@
 package com.example.kitayupov.wallet;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -18,19 +15,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.kitayupov.wallet.dto.TransAdapter;
-import com.example.kitayupov.wallet.dto.TransDbHelper;
 import com.example.kitayupov.wallet.dto.Transaction;
 import com.example.kitayupov.wallet.fragments.OnDateChangedListener;
 import com.example.kitayupov.wallet.fragments.TabsFragmentAdapter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnDateChangedListener {
+public class MainActivity extends AppCompatActivity implements OnDateChangedListener {
 
     public static final int LAYOUT = R.layout.activity_main;
 
@@ -42,18 +34,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String DESCRIPTION = "description";
     public static final String DATE = "date";
     public static final String IS_PROFIT = "is_profit";
-    private static final String LOG_TAG = "MainActivity";
+    public static final String LOG_TAG = "MainActivity";
 
-    private static ArrayList<Transaction> mArrayList;
-    private static TransAdapter mAdapter;
-    private static TransDbHelper dbHelper;
-    private static Context context;
+    private Context context;
 
-    private static float totalProfit;
-    private static float totalSpend;
-
-    private static ViewPager viewPager;
-    private static TabsFragmentAdapter adapter;
+    private ViewPager viewPager;
+    private TabsFragmentAdapter adapter;
 
     private static TextView totalTabTitle;
     private static TextView profitTabTitle;
@@ -69,6 +55,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         context = this;
 
+        initFloatingActionButton();
+        initialize();
+        initTabLayout();
+    }
+
+    private void initFloatingActionButton() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
@@ -79,22 +71,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
         }
-        initialize();
     }
 
     private void initialize() {
-        mArrayList = new ArrayList<>();
-        dbHelper = new TransDbHelper(context);
-        mAdapter = new TransAdapter(context, mArrayList);
-
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        adapter = new TabsFragmentAdapter(this, getSupportFragmentManager(), mArrayList);
+        adapter = new TabsFragmentAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(adapter);
 
-        initTabLayout();
-
         getTypeMaps();
-        readDatabase();
     }
 
     private void initTabLayout() {
@@ -133,44 +117,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void readDatabase() {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(TransDbHelper.TABLE_NAME, null, null, null, null, null, DATE);
-        if (cursor.moveToFirst()) {
-            int amountIndex = cursor.getColumnIndex(AMOUNT);
-            int typeIndex = cursor.getColumnIndex(TYPE);
-            int descIndex = cursor.getColumnIndex(DESCRIPTION);
-            int dateIndex = cursor.getColumnIndex(DATE);
-            int isProfitIndex = cursor.getColumnIndex(IS_PROFIT);
-            do {
-                float amount = cursor.getFloat(amountIndex);
-                String type = cursor.getString(typeIndex);
-                String desc = cursor.getString(descIndex);
-                Constants.addDescription(desc);
-                long date = cursor.getLong(dateIndex);
-                boolean isProfit = cursor.getInt(isProfitIndex) == 1;
-                Constants.addType(isProfit, type);
-                if (isProfit) {
-                    totalProfit += amount;
-                } else {
-                    totalSpend += amount;
-                }
-                Transaction item = new Transaction(amount, type, desc, date, isProfit);
-                mArrayList.add(item);
-                Log.d(LOG_TAG, "read " + item.toString());
-            } while (cursor.moveToNext());
-            cursor.close();
-            Log.d(LOG_TAG, "all read " + mArrayList.size());
-            setTotal();
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE:
                     doneTransaction(data);
+                    Log.e(LOG_TAG, "done transaction");
                     break;
                 default:
                     break;
@@ -182,78 +135,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void doneTransaction(Intent data) {
         if (data != null) {
             int position = data.getIntExtra(POSITION, Integer.MIN_VALUE);
-            position = (position >= 0 && position < mArrayList.size()) ? position : mArrayList.size();
             Transaction item = data.getParcelableExtra(Transaction.class.getCanonicalName());
-
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put(AMOUNT, item.getAmount());
-            values.put(TYPE, item.getType());
-            values.put(DESCRIPTION, item.getDescription());
-            values.put(DATE, item.getDate());
-            values.put(IS_PROFIT, item.isProfit() ? 1 : 0);
-
-            if (position == mArrayList.size()) {
-                db.insert(TransDbHelper.TABLE_NAME, null, values);
-                Log.d(LOG_TAG, "insert #" + position + item.toString());
-            } else {
-                updateRow(mArrayList.get(position), values);
-                Log.d(LOG_TAG, "update #" + position + item.toString());
-            }
-
-            totalProfit += item.isProfit() ? item.getAmount() : 0;
-            totalSpend += item.isProfit() ? 0 : item.getAmount();
-            mArrayList.add(position, item);
-            Collections.sort(mArrayList, new Comparator<Transaction>() {
-                @Override
-                public int compare(Transaction t1, Transaction t2) {
-                    return (int) (t1.getDate() - t2.getDate());
-                }
-            });
-            mAdapter.notifyDataSetChanged();
-            setTotal();
+            Log.e(LOG_TAG, "save transaction " + position + " " + item.toString());
+            adapter.saveTransaction(position, item);
         }
     }
 
-    private void updateRow(Transaction item, ContentValues values) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String whereClause =
-                AMOUNT + "=? and " + TYPE + "=? and " +
-                        DATE + "=? and " + IS_PROFIT + "=?";
-        String[] whereArgs = new String[]{
-                String.valueOf(item.getAmount()), item.getType(),
-                String.valueOf(item.getDate()), String.valueOf(item.isProfit() ? 1 : 0)};
-        db.update(TransDbHelper.TABLE_NAME, values, whereClause, whereArgs);
-        mArrayList.remove(item);
-        totalProfit -= item.isProfit() ? item.getAmount() : 0;
-        totalSpend -= item.isProfit() ? 0 : item.getAmount();
-    }
-
-    public static void deleteTransaction(ArrayList<Transaction> list) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        for (Transaction item : list) {
-            String whereClause =
-                    AMOUNT + "=? and " + TYPE + "=? and " +
-                            DESCRIPTION + "=? and " + DATE + "=? and " + IS_PROFIT + "=?";
-            String[] whereArgs = new String[]{
-                    String.valueOf(item.getAmount()), item.getType(), item.getDescription(),
-                    String.valueOf(item.getDate()), String.valueOf(item.isProfit() ? 1 : 0)};
-            db.delete(TransDbHelper.TABLE_NAME, whereClause, whereArgs);
-            mArrayList.remove(item);
-            if (item.isProfit()) {
-                totalProfit -= item.getAmount();
-            } else {
-                totalSpend -= item.getAmount();
-            }
-        }
-        mAdapter.notifyDataSetChanged();
-        setTotal();
-    }
-
-    private static void setTotal() {
-        totalTabTitle.setText(String.valueOf(totalProfit - totalSpend));
-        profitTabTitle.setText(String.valueOf(totalProfit));
-        spendTabTitle.setText(String.valueOf(totalSpend));
+    public static void setTotal(float profit, float spend) {
+        totalTabTitle.setText(String.valueOf(profit - spend));
+        profitTabTitle.setText(String.valueOf(profit));
+        spendTabTitle.setText(String.valueOf(spend));
     }
 
     @Override
@@ -266,12 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_clear:
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                db.execSQL("delete from " + TransDbHelper.TABLE_NAME);
-                mArrayList.clear();
-                mAdapter.notifyDataSetChanged();
-                totalProfit = totalSpend = 0;
-                setTotal();
+                adapter.clearDatabase();
                 return true;
             case R.id.action_settings:
                 return true;
@@ -285,21 +171,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return String.format(Locale.ROOT, "%d", (long) f);
         } else {
             return String.format("%s", f);
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        Intent intent = new Intent(this, StatisticsActivity.class);
-        switch (view.getId()) {
-            case R.id.profit_text_view:
-                intent.putExtra(IS_PROFIT, true);
-                startActivity(intent);
-                break;
-            case R.id.spend_text_view:
-                intent.putExtra(IS_PROFIT, false);
-                startActivity(intent);
-                break;
         }
     }
 
