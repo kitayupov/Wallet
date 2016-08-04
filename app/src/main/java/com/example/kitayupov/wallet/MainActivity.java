@@ -8,7 +8,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -129,23 +128,17 @@ public class MainActivity extends AppCompatActivity implements OnDateChangedList
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE:
-                    doneTransaction(data);
-                    Log.e(LOG_TAG, "done transaction");
+                    if (data != null) {
+                        int position = data.getIntExtra(POSITION, Integer.MIN_VALUE);
+                        Transaction item = data.getParcelableExtra(Transaction.class.getCanonicalName());
+                        adapter.saveTransaction(position, item);
+                    }
                     break;
                 default:
                     break;
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void doneTransaction(Intent data) {
-        if (data != null) {
-            int position = data.getIntExtra(POSITION, Integer.MIN_VALUE);
-            Transaction item = data.getParcelableExtra(Transaction.class.getCanonicalName());
-            Log.e(LOG_TAG, "save transaction " + position + " " + item.toString());
-            adapter.saveTransaction(position, item);
-        }
     }
 
     public static void setTotal(float profit, float spend) {

@@ -171,6 +171,24 @@ public class HistoryFragment extends AbstractTabFragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == MainActivity.RESULT_OK) {
+            switch (requestCode) {
+                case MainActivity.REQUEST_CODE:
+                    if (data != null) {
+                        int position = data.getIntExtra(MainActivity.POSITION, Integer.MIN_VALUE);
+                        Transaction item = data.getParcelableExtra(Transaction.class.getCanonicalName());
+                        saveTransaction(position, item);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     public void saveTransaction(int position, Transaction item) {
         position = (position >= 0 && position < mArrayList.size()) ? position : mArrayList.size();
 
