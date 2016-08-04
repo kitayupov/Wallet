@@ -17,13 +17,13 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
-import com.example.kitayupov.wallet.fragments.OnDateChangedListener;
-import com.example.kitayupov.wallet.fragments.TabsFragmentAdapter;
+import com.example.kitayupov.wallet.dialog.OnDatePeriodSelectListener;
+import com.example.kitayupov.wallet.adapter.TabsFragmentAdapter;
 
 import java.util.HashMap;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements OnDateChangedListener, TabLayout.OnTabSelectedListener {
+public class MainActivity extends AppCompatActivity implements OnDatePeriodSelectListener, TabLayout.OnTabSelectedListener {
 
     public static final int LAYOUT = R.layout.activity_main;
 
@@ -88,9 +88,9 @@ public class MainActivity extends AppCompatActivity implements OnDateChangedList
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setOnTabSelectedListener(this);
 
-        View totalTabView = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
-        View profitTabView = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
-        View spendTabView = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
+        View totalTabView = LayoutInflater.from(context).inflate(R.layout.tab_title_layout, null);
+        View profitTabView = LayoutInflater.from(context).inflate(R.layout.tab_title_layout, null);
+        View spendTabView = LayoutInflater.from(context).inflate(R.layout.tab_title_layout, null);
 
         totalTabTitle = (TextView) totalTabView.findViewById(R.id.tab_text);
         profitTabTitle = (TextView) profitTabView.findViewById(R.id.tab_text);

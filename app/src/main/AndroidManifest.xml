@@ -20,9 +20,6 @@
         <activity
             android:name=".EditorActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".StatisticsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

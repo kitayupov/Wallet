@@ -1,4 +1,4 @@
-package com.example.kitayupov.wallet.fragments;
+package com.example.kitayupov.wallet.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;

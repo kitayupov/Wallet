@@ -1,4 +1,4 @@
-package com.example.kitayupov.wallet.fragments;
+package com.example.kitayupov.wallet.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,10 +19,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 
-public class CategoryListFragment extends DialogFragment {
+public class CategoryListDialogFragment extends DialogFragment {
 
     private ListView listView;
-    private OnCategoryListener completeListener;
+    private OnCategorySelectListener completeListener;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -66,9 +66,9 @@ public class CategoryListFragment extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            completeListener = (OnCategoryListener) activity;
+            completeListener = (OnCategorySelectListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnCategoryListener");
+            throw new ClassCastException(activity.toString() + " must implement OnCategorySelectListener");
         }
     }
 }

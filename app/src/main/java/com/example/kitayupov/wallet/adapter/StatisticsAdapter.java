@@ -1,4 +1,4 @@
-package com.example.kitayupov.wallet.statistics;
+package com.example.kitayupov.wallet.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.example.kitayupov.wallet.MainActivity;
 import com.example.kitayupov.wallet.R;
+import com.example.kitayupov.wallet.dto.StatisticsItem;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,7 +43,7 @@ public class StatisticsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_stat_layout, null);
+            view = LayoutInflater.from(context).inflate(R.layout.item_statistics_layout, null);
         }
         fillView(view, position);
         return view;

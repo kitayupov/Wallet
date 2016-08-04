@@ -1,4 +1,4 @@
-package com.example.kitayupov.wallet.fragments;
+package com.example.kitayupov.wallet.dialog;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -12,11 +12,11 @@ import android.widget.CalendarView;
 import android.widget.DatePicker;
 
 import com.example.kitayupov.wallet.R;
-import com.example.kitayupov.wallet.StatisticsActivity;
+import com.example.kitayupov.wallet.fragment.StatisticsFragment;
 
 import java.util.Calendar;
 
-public class DatePeriodDialogFragment extends DialogFragment implements View.OnClickListener {
+public class DatePeriodSelectDialogFragment extends DialogFragment implements View.OnClickListener {
 
     private Calendar startCalendar;
     private Calendar finishCalendar;
@@ -24,7 +24,7 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
     private DatePicker startDatePicker;
     private DatePicker finishDatePicker;
 
-    private OnDateChangedListener dateChangeListener;
+    private OnDatePeriodSelectListener dateChangeListener;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -55,14 +55,14 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
         startCalendar = Calendar.getInstance();
         finishCalendar = Calendar.getInstance();
 
-        long startDate = getArguments().getLong(StatisticsActivity.START_DATE);
-        long finishDate = getArguments().getLong(StatisticsActivity.FINISH_DATE);
+        long startDate = getArguments().getLong(StatisticsFragment.START_DATE);
+        long finishDate = getArguments().getLong(StatisticsFragment.FINISH_DATE);
 
         if (startDate == 0) {
             startCalendar.setTimeInMillis(finishDate);
             startCalendar.set(Calendar.MONTH, startCalendar.get(Calendar.MONTH) - 1);
         } else {
-            startCalendar.setTimeInMillis(getArguments().getLong(StatisticsActivity.START_DATE));
+            startCalendar.setTimeInMillis(getArguments().getLong(StatisticsFragment.START_DATE));
         }
 
         startCalendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -142,9 +142,9 @@ public class DatePeriodDialogFragment extends DialogFragment implements View.OnC
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            dateChangeListener = (OnDateChangedListener) activity;
+            dateChangeListener = (OnDatePeriodSelectListener) activity;
         } catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnCategoryListener");
+            throw new ClassCastException(activity.toString() + " must implement OnCategorySelectListener");
         }
     }
 }

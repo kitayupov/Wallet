@@ -22,17 +22,17 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
 
+import com.example.kitayupov.wallet.dialog.OnCategorySelectListener;
 import com.example.kitayupov.wallet.dto.Transaction;
-import com.example.kitayupov.wallet.fragments.CalculateDialogFragment;
-import com.example.kitayupov.wallet.fragments.CategoryListFragment;
-import com.example.kitayupov.wallet.fragments.OnCalculateListener;
-import com.example.kitayupov.wallet.fragments.OnCategoryListener;
+import com.example.kitayupov.wallet.dialog.CalculateDialogFragment;
+import com.example.kitayupov.wallet.dialog.CategoryListDialogFragment;
+import com.example.kitayupov.wallet.dialog.OnCalculateListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 
-public class EditorActivity extends AppCompatActivity implements OnCategoryListener, OnCalculateListener,
+public class EditorActivity extends AppCompatActivity implements OnCategorySelectListener, OnCalculateListener,
         CompoundButton.OnCheckedChangeListener, TextWatcher, View.OnClickListener {
 
     public static final int LAYOUT = R.layout.activity_editor;
@@ -229,7 +229,7 @@ public class EditorActivity extends AppCompatActivity implements OnCategoryListe
 
     @Override
     public void onClick(View view) {
-        DialogFragment categoryDialog = new CategoryListFragment();
+        DialogFragment categoryDialog = new CategoryListDialogFragment();
         Bundle bundle = new Bundle();
         switch (view.getId()) {
             case R.id.calculate_button:

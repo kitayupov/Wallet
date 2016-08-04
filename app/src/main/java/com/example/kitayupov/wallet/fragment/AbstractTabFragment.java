@@ -1,4 +1,4 @@
-package com.example.kitayupov.wallet.fragments;
+package com.example.kitayupov.wallet.fragment;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

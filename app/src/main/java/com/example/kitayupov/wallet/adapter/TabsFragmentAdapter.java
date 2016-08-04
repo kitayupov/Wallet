@@ -1,9 +1,13 @@
-package com.example.kitayupov.wallet.fragments;
+package com.example.kitayupov.wallet.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.example.kitayupov.wallet.fragment.AbstractTabFragment;
+import com.example.kitayupov.wallet.fragment.HistoryFragment;
+import com.example.kitayupov.wallet.fragment.StatisticsFragment;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.example.kitayupov.wallet.statistics;
+package com.example.kitayupov.wallet.dto;
 
 public class StatisticsItem {
 

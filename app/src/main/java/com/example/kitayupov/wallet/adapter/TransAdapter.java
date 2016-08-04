@@ -1,4 +1,4 @@
-package com.example.kitayupov.wallet.dto;
+package com.example.kitayupov.wallet.adapter;
 
 import android.content.Context;
 import android.text.format.DateFormat;
@@ -10,10 +10,9 @@ import android.widget.TextView;
 
 import com.example.kitayupov.wallet.MainActivity;
 import com.example.kitayupov.wallet.R;
+import com.example.kitayupov.wallet.dto.Transaction;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class TransAdapter extends BaseAdapter {
 
@@ -43,7 +42,7 @@ public class TransAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_layout, null);
+            view = LayoutInflater.from(context).inflate(R.layout.item_history_layout, null);
         }
         fillView(view, position);
         return view;

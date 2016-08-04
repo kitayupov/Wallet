@@ -1,4 +1,4 @@
-package com.example.kitayupov.wallet.fragments;
+package com.example.kitayupov.wallet.fragment;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,7 +23,7 @@ import com.example.kitayupov.wallet.Constants;
 import com.example.kitayupov.wallet.EditorActivity;
 import com.example.kitayupov.wallet.MainActivity;
 import com.example.kitayupov.wallet.R;
-import com.example.kitayupov.wallet.dto.TransAdapter;
+import com.example.kitayupov.wallet.adapter.TransAdapter;
 import com.example.kitayupov.wallet.dto.TransDbHelper;
 import com.example.kitayupov.wallet.dto.Transaction;
 
@@ -33,7 +33,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class HistoryFragment extends AbstractTabFragment {
-    private static final int LAYOUT = R.layout.content_main;
+    private static final int LAYOUT = R.layout.fragment_history;
 
     private List<Transaction> mArrayList;
     private TransAdapter mAdapter;
