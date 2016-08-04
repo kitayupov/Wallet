@@ -1,7 +1,6 @@
 package com.example.kitayupov.wallet;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -18,7 +17,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
-import com.example.kitayupov.wallet.dto.Transaction;
 import com.example.kitayupov.wallet.fragments.OnDateChangedListener;
 import com.example.kitayupov.wallet.fragments.TabsFragmentAdapter;
 
@@ -71,8 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnDateChangedList
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, EditorActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE);
+                    adapter.createTransaction();
                 }
             });
         }
@@ -121,24 +118,6 @@ public class MainActivity extends AppCompatActivity implements OnDateChangedList
         for (String type : Settings.descriptions) {
             Constants.addDescription(type);
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_CODE:
-                    if (data != null) {
-                        int position = data.getIntExtra(POSITION, Integer.MIN_VALUE);
-                        Transaction item = data.getParcelableExtra(Transaction.class.getCanonicalName());
-                        adapter.saveTransaction(position, item);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public static void setTotal(float profit, float spend) {

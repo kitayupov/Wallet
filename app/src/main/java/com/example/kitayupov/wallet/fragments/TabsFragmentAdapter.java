@@ -5,8 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.kitayupov.wallet.dto.Transaction;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +55,7 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
         historyFragment.clearDatabase();
     }
 
-    public void saveTransaction(int position, Transaction item) {
-        historyFragment.saveTransaction(position, item);
+    public void createTransaction() {
+        historyFragment.createTransaction();
     }
 }

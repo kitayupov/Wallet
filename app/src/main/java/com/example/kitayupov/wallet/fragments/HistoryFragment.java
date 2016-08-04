@@ -137,6 +137,11 @@ public class HistoryFragment extends AbstractTabFragment {
         });
     }
 
+    public void createTransaction() {
+        Intent intent = new Intent(context, EditorActivity.class);
+        startActivityForResult(intent, MainActivity.REQUEST_CODE);
+    }
+
     private void readDatabase() {
         totalProfit = 0;
         totalSpend = 0;
@@ -223,13 +228,9 @@ public class HistoryFragment extends AbstractTabFragment {
 
     private void updateRow(Transaction item, ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String whereClause =
-                MainActivity.AMOUNT + "=? and " + MainActivity.TYPE + "=? and " +
-                        MainActivity.DATE + "=? and " + MainActivity.IS_PROFIT + "=?";
-        String[] whereArgs = new String[]{
-                String.valueOf(item.getAmount()), item.getType(),
-                String.valueOf(item.getDate()), String.valueOf(item.isProfit() ? 1 : 0)};
-        db.update(TransDbHelper.TABLE_NAME, values, whereClause, whereArgs);
+        String whereClause = MainActivity.DATE + "=?";
+        String[] whereArgs = new String[]{String.valueOf(item.getDate())};
+        int id = db.update(TransDbHelper.TABLE_NAME, values, whereClause, whereArgs);
         mArrayList.remove(item);
         totalProfit -= item.isProfit() ? item.getAmount() : 0;
         totalSpend -= item.isProfit() ? 0 : item.getAmount();
