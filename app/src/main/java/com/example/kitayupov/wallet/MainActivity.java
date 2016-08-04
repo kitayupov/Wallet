@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -13,15 +12,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.example.kitayupov.wallet.dto.TransAdapter;
@@ -31,7 +25,6 @@ import com.example.kitayupov.wallet.fragments.OnDateChangedListener;
 import com.example.kitayupov.wallet.fragments.TabsFragmentAdapter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -62,12 +55,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static ViewPager viewPager;
     private static TabsFragmentAdapter adapter;
 
-    private static TabLayout tabLayout;
+    private static TextView totalTabTitle;
+    private static TextView profitTabTitle;
+    private static TextView spendTabTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -95,11 +91,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adapter = new TabsFragmentAdapter(this, getSupportFragmentManager(), mArrayList);
         viewPager.setAdapter(adapter);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
+        initTabLayout();
 
         getTypeMaps();
         readDatabase();
+    }
+
+    private void initTabLayout() {
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
+
+        View totalTabView = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
+        View profitTabView = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
+        View spendTabView = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
+
+        totalTabTitle = (TextView) totalTabView.findViewById(R.id.tab_text);
+        profitTabTitle = (TextView) profitTabView.findViewById(R.id.tab_text);
+        spendTabTitle = (TextView) spendTabView.findViewById(R.id.tab_text);
+
+        totalTabTitle.setTextColor(context.getResources().getColor(R.color.colorTextLight));
+        profitTabTitle.setTextColor(context.getResources().getColor(R.color.colorProfit));
+        spendTabTitle.setTextColor(context.getResources().getColor(R.color.colorSpend));
+
+        tabLayout.getTabAt(0).setCustomView(totalTabView);
+        tabLayout.getTabAt(1).setCustomView(profitTabView);
+        tabLayout.getTabAt(2).setCustomView(spendTabView);
     }
 
     private void getTypeMaps() {
@@ -144,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(LOG_TAG, "read " + item.toString());
             } while (cursor.moveToNext());
             cursor.close();
-            Log.d(LOG_TAG, "total read " + mArrayList.size());
+            Log.d(LOG_TAG, "all read " + mArrayList.size());
             setTotal();
         }
     }
@@ -235,27 +251,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private static void setTotal() {
-        adapter.setTitles(totalProfit - totalSpend, totalProfit, totalSpend);
-
-        View view1 = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
-        View view2 = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
-        View view3 = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
-
-        TextView total = (TextView) view1.findViewById(R.id.tab_text);
-        TextView profit = (TextView) view2.findViewById(R.id.tab_text);
-        TextView spend = (TextView) view3.findViewById(R.id.tab_text);
-
-        total.setText(String.valueOf(totalProfit - totalSpend));
-        profit.setText(String.valueOf(totalProfit));
-        spend.setText(String.valueOf(totalSpend));
-
-        total.setTextColor(context.getResources().getColor(R.color.colorTextLight));
-        profit.setTextColor(context.getResources().getColor(R.color.colorProfit));
-        spend.setTextColor(context.getResources().getColor(R.color.colorSpend));
-
-        tabLayout.getTabAt(0).setCustomView(view1);
-        tabLayout.getTabAt(1).setCustomView(view2);
-        tabLayout.getTabAt(2).setCustomView(view3);
+        totalTabTitle.setText(String.valueOf(totalProfit - totalSpend));
+        profitTabTitle.setText(String.valueOf(totalProfit));
+        spendTabTitle.setText(String.valueOf(totalSpend));
     }
 
     @Override

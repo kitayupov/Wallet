@@ -60,12 +60,6 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
         historyFragment.refreshList(data);
     }
 
-    public void setTitles(float total, float totalProfit, float totalSpend) {
-        historyFragment.setTitle(String.valueOf(total));
-        statisticsProfitFragment.setTitle(String.valueOf(totalProfit));
-        statisticsSpendFragment.setTitle(String.valueOf(totalSpend));
-    }
-
     public void setDates(long date1, long date2) {
         statisticsProfitFragment.setDatePeriod(date1, date2);
     }
