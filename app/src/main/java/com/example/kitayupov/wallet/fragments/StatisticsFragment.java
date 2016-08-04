@@ -40,8 +40,8 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
     private Map<String, Float> map;
     private boolean isProfit;
 
-    private static long startDate;
-    private static long finishDate;
+    private long startDate;
+    private long finishDate;
 
     private SelectionTime selectionTime;
     private SelectionType selectionType;
@@ -105,6 +105,8 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
 
     // Reads transaction database
     private void readDatabase() {
+        Log.e("kitayupov", new SimpleDateFormat("dd/MM/yyyy").format(startDate));
+        Log.e("kitayupov", new SimpleDateFormat("dd/MM/yyyy").format(finishDate));
         float total = 0f;
         map = new HashMap<>();
         TransDbHelper dbHelper = new TransDbHelper(context);
@@ -114,6 +116,7 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
         String[] selectionArgs = {String.valueOf(isProfit ? 1 : 0), String.valueOf(startDate), String.valueOf(finishDate)};
         Cursor cursor = db.query(TransDbHelper.TABLE_NAME, columns, selection, selectionArgs, null, null, null);
         if (cursor.moveToFirst()) {
+            Log.e("kitayupov", "cursor in");
             int amountIndex = cursor.getColumnIndex(MainActivity.AMOUNT);
             int typeIndex = cursor.getColumnIndex(MainActivity.TYPE);
             int dateIndex = cursor.getColumnIndex(MainActivity.DATE);
@@ -130,6 +133,7 @@ public class StatisticsFragment extends AbstractTabFragment implements View.OnCl
             } while (cursor.moveToNext());
             cursor.close();
         }
+        Log.e("kitayupov", "cursor out");
         setResult(total);
     }
 
