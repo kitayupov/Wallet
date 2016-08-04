@@ -13,6 +13,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
 import com.example.kitayupov.wallet.dto.Transaction;
@@ -22,7 +26,7 @@ import com.example.kitayupov.wallet.fragments.TabsFragmentAdapter;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements OnDateChangedListener {
+public class MainActivity extends AppCompatActivity implements OnDateChangedListener, TabLayout.OnTabSelectedListener {
 
     public static final int LAYOUT = R.layout.activity_main;
 
@@ -37,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements OnDateChangedList
     public static final String LOG_TAG = "MainActivity";
 
     private Context context;
+
+    private FloatingActionButton fab;
 
     private ViewPager viewPager;
     private TabsFragmentAdapter adapter;
@@ -61,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnDateChangedList
     }
 
     private void initFloatingActionButton() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -84,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements OnDateChangedList
     private void initTabLayout() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setOnTabSelectedListener(this);
 
         View totalTabView = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
         View profitTabView = LayoutInflater.from(context).inflate(R.layout.tab_layout, null);
@@ -177,5 +184,69 @@ public class MainActivity extends AppCompatActivity implements OnDateChangedList
     @Override
     public void onDateChanged(long date1, long date2) {
         adapter.setDates(date1, date2);
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        viewPager.setCurrentItem(tab.getPosition());
+        animateFab(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
+    }
+
+    protected void animateFab(final int position) {
+        fab.clearAnimation();
+        // Scale down animation
+        if (position == 0) {
+            ScaleAnimation shrink = new ScaleAnimation(0.2f, 1f, 0.2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            shrink.setDuration(150);     // animation duration in milliseconds
+            shrink.setInterpolator(new AccelerateInterpolator());
+            shrink.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    fab.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            fab.startAnimation(shrink);
+        } else if (fab.getVisibility() == View.VISIBLE) {
+            ScaleAnimation shrink = new ScaleAnimation(1f, 0.2f, 1f, 0.2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            shrink.setDuration(150);     // animation duration in milliseconds
+            shrink.setInterpolator(new DecelerateInterpolator());
+            shrink.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    fab.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            fab.startAnimation(shrink);
+        }
     }
 }
