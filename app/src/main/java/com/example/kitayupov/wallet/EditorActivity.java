@@ -68,8 +68,8 @@ public class EditorActivity extends AppCompatActivity implements OnCategorySelec
 
     private void initialize() {
         calendar = Calendar.getInstance();
-        colorProfit = getResources().getColor(R.color.colorProfit);
-        colorSpend = getResources().getColor(R.color.colorSpend);
+        colorProfit = getResources().getColor(R.color.colorTextProfit);
+        colorSpend = getResources().getColor(R.color.colorTextSpend);
 
         amountEditText = (EditText) findViewById(R.id.amount_edit_text);
         typeEditText = (AutoCompleteTextView) findViewById(R.id.type_edit_text);

@@ -60,9 +60,9 @@ public class TransAdapter extends BaseAdapter {
         dateText.setText(DateFormat.format("dd.MM.yyyy", item.getDate()));
 
         if (item.isProfit()) {
-            amountText.setTextColor(context.getResources().getColor(R.color.colorProfit));
+            amountText.setTextColor(context.getResources().getColor(R.color.colorTextProfit));
         } else {
-            amountText.setTextColor(context.getResources().getColor(R.color.colorSpend));
+            amountText.setTextColor(context.getResources().getColor(R.color.colorTextSpend));
         }
     }
 

@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements OnDatePeriodSelec
         spendTabTitle = (TextView) spendTabView.findViewById(R.id.tab_text);
 
         totalTabTitle.setTextColor(context.getResources().getColor(R.color.colorTextLight));
-        profitTabTitle.setTextColor(context.getResources().getColor(R.color.colorProfit));
-        spendTabTitle.setTextColor(context.getResources().getColor(R.color.colorSpend));
+        profitTabTitle.setTextColor(context.getResources().getColor(R.color.colorTextProfit));
+        spendTabTitle.setTextColor(context.getResources().getColor(R.color.colorTextSpend));
 
         tabLayout.getTabAt(0).setCustomView(totalTabView);
         tabLayout.getTabAt(1).setCustomView(profitTabView);
