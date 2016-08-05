@@ -51,14 +51,9 @@ public class HistoryFragment extends AbstractTabFragment {
         HistoryFragment fragment = new HistoryFragment();
         fragment.setArguments(args);
         fragment.setContext(context);
-        fragment.setData(new TransDbHelper(context));
         fragment.setTitle("Total");
 
         return fragment;
-    }
-
-    private void setData(TransDbHelper dbHelper) {
-        this.dbHelper = dbHelper;
     }
 
     @Nullable
@@ -233,7 +228,7 @@ public class HistoryFragment extends AbstractTabFragment {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String whereClause = Constants.DATE + "=?";
         String[] whereArgs = new String[]{String.valueOf(item.getDate())};
-        int id = db.update(Constants.TABLE_NAME, values, whereClause, whereArgs);
+        db.update(Constants.TABLE_NAME, values, whereClause, whereArgs);
         mArrayList.remove(item);
         totalProfit -= item.isProfit() ? item.getAmount() : 0;
         totalSpend -= item.isProfit() ? 0 : item.getAmount();
@@ -262,6 +257,7 @@ public class HistoryFragment extends AbstractTabFragment {
 
     public void setContext(Context context) {
         this.context = context;
+        dbHelper = new TransDbHelper(context);
     }
 
     public void clearDatabase() {
