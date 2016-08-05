@@ -9,18 +9,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.kitayupov.wallet.Constants;
-import com.example.kitayupov.wallet.MainActivity;
 import com.example.kitayupov.wallet.R;
 
 public class CalculateDialogFragment extends DialogFragment implements View.OnClickListener {
 
-    private EditText editText;
-    private TextView textView;
+    private TextView editTextView;
+    private TextView resultTextView;
     private MathAction action;
+    private StringBuilder builder;
     private float result;
 
     private OnCalculateListener listener;
@@ -64,8 +63,9 @@ public class CalculateDialogFragment extends DialogFragment implements View.OnCl
 
     // Clears result
     private void OnClearButtonClicked() {
-        textView.setText(null);
-        editText.setText(null);
+        resultTextView.setText(null);
+        editTextView.setText(null);
+        builder = new StringBuilder();
         result = 0;
     }
 
@@ -80,12 +80,16 @@ public class CalculateDialogFragment extends DialogFragment implements View.OnCl
     private View getContentView() {
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_calculate, null);
 
-        textView = (TextView) view.findViewById(R.id.text);
-        editText = (EditText) view.findViewById(R.id.edit);
-        editText.requestFocus();
+        resultTextView = (TextView) view.findViewById(R.id.text);
+        editTextView = (TextView) view.findViewById(R.id.edit);
+        editTextView.requestFocus();
+
+        builder = new StringBuilder();
 
         if (getArguments() != null && getArguments().containsKey(Constants.AMOUNT)) {
-            editText.setText(String.valueOf(getArguments().getFloat(Constants.AMOUNT)));
+            float decimal = getArguments().getFloat(Constants.AMOUNT);
+            builder.append(formatFloat(decimal));
+            editTextView.setText(builder.toString());
         }
 
         view.findViewById(R.id.button_add).setOnClickListener(this);
@@ -94,71 +98,157 @@ public class CalculateDialogFragment extends DialogFragment implements View.OnCl
         view.findViewById(R.id.button_divide).setOnClickListener(this);
         view.findViewById(R.id.button_equal).setOnClickListener(this);
 
+        view.findViewById(R.id.button_clear).setOnClickListener(this);
+        view.findViewById(R.id.button_dot).setOnClickListener(this);
+
+        view.findViewById(R.id.button_numeric_0).setOnClickListener(this);
+        view.findViewById(R.id.button_numeric_1).setOnClickListener(this);
+        view.findViewById(R.id.button_numeric_2).setOnClickListener(this);
+        view.findViewById(R.id.button_numeric_3).setOnClickListener(this);
+        view.findViewById(R.id.button_numeric_4).setOnClickListener(this);
+        view.findViewById(R.id.button_numeric_5).setOnClickListener(this);
+        view.findViewById(R.id.button_numeric_6).setOnClickListener(this);
+        view.findViewById(R.id.button_numeric_7).setOnClickListener(this);
+        view.findViewById(R.id.button_numeric_8).setOnClickListener(this);
+        view.findViewById(R.id.button_numeric_9).setOnClickListener(this);
+
         return view;
     }
 
     @Override
     public void onClick(View view) {
-        String text = editText.getText().toString();
-        if ("".equals(text)) {
-            if (!MathAction.EQUAL.equals(action)) {
-                return;
-            } else {
-                text = "0";
-            }
-        }
-        if (!"".equals(textView.getText().toString())) {
-            textView.append("\n");
-        }
         switch (view.getId()) {
             case R.id.button_add:
-                takeResult(Float.parseFloat(text), MathAction.ADD);
-                textView.append("\n+");
+                takeResult(MathAction.ADD);
+                resultTextView.append("\n+");
                 break;
             case R.id.button_subtract:
-                takeResult(Float.parseFloat(text), MathAction.SUBTRACT);
-                textView.append("\n-");
+                takeResult(MathAction.SUBTRACT);
+                resultTextView.append("\n-");
                 break;
             case R.id.button_multiply:
-                takeResult(Float.parseFloat(text), MathAction.MULTIPLY);
-                textView.append("\n*");
+                takeResult(MathAction.MULTIPLY);
+                resultTextView.append("\n*");
                 break;
             case R.id.button_divide:
-                takeResult(Float.parseFloat(text), MathAction.DIVIDE);
-                textView.append("\n/");
+                takeResult(MathAction.DIVIDE);
+                resultTextView.append("\n/");
                 break;
             case R.id.button_equal:
-                takeResult(Float.parseFloat(text), MathAction.EQUAL);
-                textView.append("\n");
+                takeResult(MathAction.EQUAL);
+                resultTextView.append("\n");
+                break;
+            case R.id.button_numeric_0:
+                appendNumber(0);
+                break;
+            case R.id.button_numeric_1:
+                appendNumber(1);
+                break;
+            case R.id.button_numeric_2:
+                appendNumber(2);
+                break;
+            case R.id.button_numeric_3:
+                appendNumber(3);
+                break;
+            case R.id.button_numeric_4:
+                appendNumber(4);
+                break;
+            case R.id.button_numeric_5:
+                appendNumber(5);
+                break;
+            case R.id.button_numeric_6:
+                appendNumber(6);
+                break;
+            case R.id.button_numeric_7:
+                appendNumber(7);
+                break;
+            case R.id.button_numeric_8:
+                appendNumber(8);
+                break;
+            case R.id.button_numeric_9:
+                appendNumber(9);
+                break;
+            case R.id.button_dot:
+                setFloatingDot();
+                break;
+            case R.id.button_clear:
+                clearLast();
                 break;
         }
-        editText.setText(null);
+        editTextView.setText(builder);
+    }
+
+    private void clearLast() {
+        String text = builder.toString();
+        if (!"".equals(text)) {
+            text = text.substring(0, text.length() - 1);
+            builder = new StringBuilder().append(text);
+        }
+    }
+
+    private void setFloatingDot() {
+        if (!builder.toString().contains(".")) {
+            builder.append(".");
+        }
+    }
+
+    private void appendNumber(int i) {
+        if (!"".equals(builder.toString()) || i != 0) {
+            builder.append(String.valueOf(i));
+        }
+    }
+
+    private String formatFloat(float f) {
+        String text;
+        if (f == (long) f) {
+            text = String.valueOf((long) f);
+        } else {
+            text = String.valueOf(f);
+        }
+        return text;
     }
 
     // Takes arithmetic operations
-    private void takeResult(float v, MathAction a) {
+    private void takeResult(MathAction a) {
+        if ("".equals(resultTextView.getText().toString())) {
+            if ("".equals(builder.toString())) {
+                return;
+            }
+        } else {
+            resultTextView.append("\n");
+        }
+
+        float decimal;
+        if (!"".equals(builder.toString())) {
+            decimal = Float.parseFloat(builder.toString());
+        } else {
+            decimal = result;
+        }
+
         if (result == 0) {
-            result = v;
+            result = decimal;
         } else {
             switch (action) {
                 case ADD:
-                    result += v;
+                    result += decimal;
                     break;
                 case SUBTRACT:
-                    result -= v;
+                    result -= decimal;
                     break;
                 case MULTIPLY:
-                    result *= v;
+                    result *= decimal;
                     break;
                 case DIVIDE:
-                    result /= v;
+                    result /= decimal;
                     break;
                 case EQUAL:
+                    result = decimal;
                     break;
             }
         }
-        textView.setText(String.valueOf(result));
+        resultTextView.setText(String.valueOf(result));
         action = a;
+        builder = new StringBuilder();
     }
 
     // Passes data to activity
